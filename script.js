@@ -180,10 +180,10 @@
       var el = document.createElement('i');
       var pos;
       if (s < 30) {
-        pos = ((s + 0.5) / 30) * 100;
+        pos = 14 + ((s + 0.5) / 30) * 72;
         el.className = 'top';
       } else {
-        pos = 100 - ((s - 30 + 0.5) / 30) * 100;
+        pos = 86 - ((s - 30 + 0.5) / 30) * 72;
         el.className = 'bottom';
       }
       el.style.left = pos + '%';
