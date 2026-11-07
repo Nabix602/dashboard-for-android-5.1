@@ -239,17 +239,16 @@ body.playing #ambient-glow {
 /* News */
 #news {
   opacity: 0.8;
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-  min-height: 0;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
   margin-top: 2vh;
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  -webkit-justify-content: center;
-  justify-content: center;
-  padding: 2vh 1.6vw;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  padding: 2.2vh 1.6vw;
 }
 
 .news-source {

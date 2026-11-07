@@ -573,8 +573,57 @@
     document.addEventListener('touchmove', reveal);
   }
 
+  /* ---------- Sunrise and sunset (computed locally, Gazeran) ---------- */
+
+  var SUN_LAT = 48.76;
+  var SUN_LON = 1.87;
+
+  // Standard solar position approximation, accurate to about a minute.
+  function sunEvent(date, rising) {
+    var rad = Math.PI / 180;
+    var J2000 = 2451545;
+    var d0 = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    var jd = d0 / 86400000 + 2440587.5 + 0.5;
+    var n = Math.round(jd - J2000 + 0.0008);
+    var js = n - SUN_LON / 360;
+    var M = (357.5291 + 0.98560028 * js) % 360;
+    var C = 1.9148 * Math.sin(M * rad) + 0.02 * Math.sin(2 * M * rad) + 0.0003 * Math.sin(3 * M * rad);
+    var lambda = (M + C + 180 + 102.9372) % 360;
+    var jt = J2000 + js + 0.0053 * Math.sin(M * rad) - 0.0069 * Math.sin(2 * lambda * rad);
+    var sinDec = Math.sin(lambda * rad) * Math.sin(23.4397 * rad);
+    var cosDec = Math.cos(Math.asin(sinDec));
+    var cosW = (Math.sin(-0.833 * rad) - Math.sin(SUN_LAT * rad) * sinDec) /
+      (Math.cos(SUN_LAT * rad) * cosDec);
+    if (cosW > 1 || cosW < -1) {
+      return null;
+    }
+    var w = Math.acos(cosW) / rad;
+    var j = rising ? jt - w / 360 : jt + w / 360;
+    return new Date((j - 2440587.5) * 86400000);
+  }
+
+  function hhmm(d) {
+    if (!d) {
+      return '';
+    }
+    return (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+  }
+
+  function updateSun() {
+    var el = $('sun');
+    if (!el) {
+      return;
+    }
+    var now = new Date();
+    var rise = sunEvent(now, true);
+    var set = sunEvent(now, false);
+    el.textContent = rise && set ? '☀ ' + hhmm(rise) + '   ☾ ' + hhmm(set) : '';
+  }
+
   window.onload = function () {
     init();
     setupFullscreen();
+    updateSun();
+    window.setInterval(updateSun, 60000);
   };
 })();
