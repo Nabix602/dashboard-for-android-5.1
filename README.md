@@ -150,11 +150,11 @@ Le tableau de bord ne verrouille jamais Android et ne bloque pas la sortie.
 
 - Actif de 21:30 à 07:00, heure du navigateur.
 - Fond noir, seules l'heure, la date et la météo restent visibles.
-- Les cartes citation, Spotify, PSG et actualités sont masquées.
+- Les cartes citation, Spotify et actualités sont masquées.
 
 ## Mode veille
 
-Après 30 minutes sans morceau Spotify ni match PSG affiché, le tableau de bord ne garde que l'heure, la date, la météo et une citation. Il revient automatiquement quand un morceau commence ou qu'un match devient visible.
+Après 30 minutes sans morceau Spotify, le tableau de bord ne garde que l'heure, la date, la météo et une citation. Il revient automatiquement quand un morceau commence.
 
 ## Personnaliser les citations
 
