@@ -142,7 +142,9 @@ Si la météo ne répond pas, la carte reste masquée.
 - Source : flux RSS publics (Numerama, Le Monde Pixels, Le Monde Sciences), convertis en JSON par le service gratuit [rss2json](https://rss2json.com).
 - Sujets : technologie, sciences, France et actualité générale. Un filtre simple écarte les titres politiques ou de type « clickbait ».
 - Affichage : un titre court, la source et l'heure de publication.
-- Rotation : toutes les 10 minutes.
+- Rotation : toutes les 15 minutes, avec un fondu doux. Le texte ne change jamais brusquement.
+- Si moins de 3 titres sont disponibles, la rotation s'arrête et le titre le plus récent reste affiché.
+- Si la source ne répond pas, la carte est masquée sans message d'erreur.
 - Actualisation des flux : toutes les heures.
 - Hors ligne : la carte est masquée.
 

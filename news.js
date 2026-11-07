@@ -11,8 +11,9 @@
   var CONVERTER = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
   var REFRESH_MS = 60 * 60 * 1000;
-  var ROTATE_MS = 10 * 60 * 1000;
+  var ROTATE_MS = 15 * 60 * 1000;
   var MAX_ITEMS = 8;
+  var MIN_ROTATE_ITEMS = 3; // below this, keep the best headline still
   var MAX_CHARS = 80;
 
   // Simple filter against political and clickbait headlines.
@@ -197,7 +198,10 @@
   }
 
   function rotate() {
-    index++;
+    if (items.length < MIN_ROTATE_ITEMS) {
+      return;
+    }
+    index = (index + 1) % items.length;
     render();
   }
 
