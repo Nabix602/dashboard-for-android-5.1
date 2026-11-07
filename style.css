@@ -458,43 +458,6 @@ body.playing #ambient-glow {
   transition: opacity 0.6s ease;
 }
 
-/* Fullscreen controls: hidden until touched, fade out after inactivity */
-#controls {
-  position: absolute;
-  right: 3vw;
-  bottom: 3vh;
-  z-index: 2;
-  opacity: 0;
-  pointer-events: none;
-  -webkit-transition: opacity 1s ease;
-  transition: opacity 1s ease;
-}
-
-body.ui-active #controls {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-#controls button {
-  background: rgba(28, 28, 30, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  color: #d1d1d6;
-  font-family: inherit;
-  font-size: 1.8vh;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  padding: 1.1vh 2.2vw;
-  margin-left: 0.8vw;
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-#controls button:active {
-  background: rgba(255, 255, 255, 0.16);
-}
-
 /* Screen saver: keep clock, weather and one quote only */
 body.saver .saver-hide {
   display: none !important;
@@ -544,14 +507,6 @@ body.night #weather {
   -webkit-align-items: center;
   align-items: center;
   text-align: center;
-}
-
-body.night #controls {
-  opacity: 0;
-}
-
-body.night.ui-active #controls {
-  opacity: 0.5;
 }
 
 body.night #net {

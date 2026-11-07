@@ -14,7 +14,7 @@ Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans 
 - **PSG** : prochain match, match en direct ou résultat de la veille, avec la compétition, l'adversaire, la date et l'heure. La carte n'apparaît que dans une fenêtre autour des matchs.
 - **Mode nuit** de 21:30 à 07:00 : fond noir, seules l'heure, la date et la météo restent visibles.
 - **Mode veille** : après 30 minutes sans morceau ni match, le tableau de bord ne garde que l'heure, la météo et une citation. Il revient seul quand Spotify ou un match démarre.
-- **Plein écran** : bouton discret, masqué après quelques secondes d'inactivité.
+- **Plein écran** : géré par le navigateur, sans bouton à l'écran.
 - **Indicateur de connexion** très discret (en ligne ou hors ligne), affiché quelques secondes après un changement.
 - **Écran de démarrage** « Dashboard Esteban » pendant quelques secondes.
 
@@ -30,7 +30,6 @@ Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans 
 - Mise en page en Flexbox (préfixes `-webkit-` inclus). Pas de CSS Grid, pas de variables CSS, pas de `backdrop-filter`.
 - Requêtes réseau par `XMLHttpRequest`, sans `fetch`.
 - Animations légères (opacité uniquement), sans effets coûteux.
-- Les variantes de l'API plein écran (`webkit`, `moz`, `ms`) sont testées à l'exécution.
 
 Ces points sont appliqués dans le code, mais le projet doit être testé sur l'appareil réel. Les versions du navigateur Remix OS peuvent varier.
 
@@ -57,7 +56,7 @@ Puis ouvrez `http://IP_DE_VOTRE_PC:8000` sur la tablette.
 2. Ajoutez les fichiers du projet à la racine du dépôt : `index.html`, `style.css`, `script.js`, `quotes.js`, `weather.js`, `psg.js`, `news.js`.
 3. Dans **Settings > Pages**, choisissez **Deploy from a branch**, la branche `main` et le dossier `/ (root)`.
 4. Attendez quelques minutes. L'adresse sera de la forme `https://VOTRE-NOM.github.io/dashboard-esteban/`.
-5. Ouvrez cette adresse sur la tablette, puis activez le plein écran.
+5. Ouvrez cette adresse sur la tablette, puis passez en plein écran via le navigateur si besoin.
 
 Important : tout le code, y compris votre clé Last.fm si vous la renseignez, est public sur GitHub Pages. Ne mettez jamais de mot de passe ou de clé privée dans ce projet. Une clé Last.fm en lecture seule est acceptable mais reste visible par tous.
 
@@ -78,8 +77,8 @@ dashboard-esteban/
 Rôle des fichiers :
 
 - `index.html` : structure de la page et chargement des scripts dans cet ordre : `quotes.js`, `weather.js`, `psg.js`, `news.js`, `script.js`.
-- `style.css` : apparence, animations, mode nuit, mode veille, contrôles.
-- `script.js` : horloge, mode nuit, citations, Spotify via Last.fm, mode veille, indicateur de connexion, plein écran, contrôles et démarrage. Il coordonne les autres modules.
+- `style.css` : apparence, animations, mode nuit, mode veille.
+- `script.js` : horloge, mode nuit, citations, Spotify via Last.fm, mode veille, indicateur de connexion, et démarrage. Il coordonne les autres modules.
 - `quotes.js` : liste des citations et liste personnelle `USER_QUOTES`.
 - `weather.js` : météo Open-Meteo et teinte d'ambiance.
 - `psg.js` : matchs du PSG via TheSportsDB.
@@ -151,17 +150,19 @@ Les adresses des flux doivent être vérifiées et peuvent être modifiées dans
 
 ## Plein écran
 
-- Le bouton **Plein écran** apparaît en bas à droite quand vous touchez l'écran ou bougez la souris.
-- Il disparaît automatiquement après environ 3,5 secondes d'inactivité.
-- Le bouton **Quitter** permet de revenir au mode normal à tout moment.
-- Le tableau de bord ne verrouille jamais Android et ne bloque pas la sortie.
+Le tableau de bord n'affiche aucun bouton de plein écran. Utilisez les commandes du navigateur :
+
+- Ordinateur : touche F11 pour entrer ou sortir du plein écran.
+- Échap pour quitter le plein écran.
+- Tablette : menu du navigateur, si celui-ci propose le plein écran.
+
+Le tableau de bord ne verrouille jamais Android et ne bloque pas la sortie.
 
 ## Mode nuit
 
 - Actif de 21:30 à 07:00, heure du navigateur.
 - Fond noir, seules l'heure, la date et la météo restent visibles.
 - Les cartes citation, Spotify, PSG et actualités sont masquées.
-- Les contrôles restent très discrets.
 
 ## Mode veille
 

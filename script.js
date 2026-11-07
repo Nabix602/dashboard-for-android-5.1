@@ -19,7 +19,6 @@
   var DAY_START_SHIFT_MS = 7 * 3600000;
   var DAILY_WINDOW_HOURS = 2;
   var NET_SHOW_MS = 4000;
-  var UI_IDLE_MS = 3500;
 
   function $(id) {
     return document.getElementById(id);
@@ -106,7 +105,6 @@
 
   var nightOn = false;
   var saverOn = false;
-  var uiOn = false;
   var playingOn = false;
 
   function applyBodyClass() {
@@ -116,9 +114,6 @@
     }
     if (saverOn) {
       parts.push('saver');
-    }
-    if (uiOn) {
-      parts.push('ui-active');
     }
     if (playingOn) {
       parts.push('playing');
@@ -376,97 +371,6 @@
     showNet(navigator.onLine !== false);
   }
 
-  /* ---------- Fullscreen controls and inactivity ---------- */
-
-  var uiTimer = null;
-
-  function wakeUi() {
-    if (!uiOn) {
-      uiOn = true;
-      applyBodyClass();
-    }
-    if (uiTimer) {
-      window.clearTimeout(uiTimer);
-    }
-    uiTimer = window.setTimeout(function () {
-      uiTimer = null;
-      uiOn = false;
-      applyBodyClass();
-    }, UI_IDLE_MS);
-  }
-
-  function setupUiActivity() {
-    var events = ['mousemove', 'mousedown', 'touchstart', 'keydown'];
-    for (var i = 0; i < events.length; i++) {
-      document.addEventListener(events[i], wakeUi, false);
-    }
-    wakeUi();
-  }
-
-  var REQUEST_NAMES = ['requestFullscreen', 'webkitRequestFullscreen', 'mozRequestFullScreen', 'msRequestFullscreen'];
-  var EXIT_NAMES = ['exitFullscreen', 'webkitExitFullscreen', 'mozCancelFullScreen', 'msExitFullscreen'];
-
-  function requestFn() {
-    var el = document.documentElement;
-    for (var i = 0; i < REQUEST_NAMES.length; i++) {
-      if (typeof el[REQUEST_NAMES[i]] === 'function') {
-        return el[REQUEST_NAMES[i]];
-      }
-    }
-    return null;
-  }
-
-  function exitFn() {
-    for (var i = 0; i < EXIT_NAMES.length; i++) {
-      if (typeof document[EXIT_NAMES[i]] === 'function') {
-        return document[EXIT_NAMES[i]];
-      }
-    }
-    return null;
-  }
-
-  function isFullscreen() {
-    return !!(document.fullscreenElement || document.webkitFullscreenElement ||
-      document.mozFullScreenElement || document.msFullscreenElement);
-  }
-
-  function updateFullscreenButtons() {
-    var fsOn = isFullscreen();
-    show($('btn-enter'), !fsOn && !!requestFn());
-    show($('btn-exit'), fsOn);
-  }
-
-  function enterFullscreen() {
-    var f = requestFn();
-    if (f) {
-      try {
-        f.call(document.documentElement);
-      } catch (e) {}
-    }
-    updateFullscreenButtons();
-  }
-
-  function exitFullscreen() {
-    var f = exitFn();
-    if (f) {
-      try {
-        f.call(document);
-      } catch (e) {}
-    }
-    updateFullscreenButtons();
-  }
-
-  function setupFullscreen() {
-    $('btn-enter').onclick = enterFullscreen;
-    $('btn-exit').onclick = exitFullscreen;
-
-    var events = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
-    for (var i = 0; i < events.length; i++) {
-      document.addEventListener(events[i], updateFullscreenButtons, false);
-    }
-    updateFullscreenButtons();
-  }
-
   /* ---------- Init ---------- */
 
   function init() {
@@ -498,9 +402,6 @@
     window.addEventListener('online', onNetChange, false);
     window.addEventListener('offline', onNetChange, false);
     onNetChange();
-
-    setupFullscreen();
-    setupUiActivity();
   }
 
   window.onload = init;
