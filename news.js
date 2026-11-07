@@ -4,15 +4,18 @@
   // Free public feeds, converted to JSON by rss2json (no key needed for light use).
   // Technology, science and France. Verify these URLs before relying on them.
   var FEEDS = [
-    'https://www.numerama.com/feed/',
-    'https://www.lemonde.fr/pixels/rss_full.xml',
-    'https://www.lemonde.fr/sciences/rss_full.xml'
+    'https://www.bfmtv.com/rss/news-24-7/',
+    'https://www.francetvinfo.fr/titres.rss',
+    'https://www.lemonde.fr/rss/une.xml',
+    'https://www.lefigaro.fr/rss/figaro_actualites.xml',
+    'https://www.lequipe.fr/rss/actu_rss.xml',
+    'https://www.numerama.com/feed/'
   ];
   var CONVERTER = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
   var REFRESH_MS = 60 * 60 * 1000;
   var ROTATE_MS = 15 * 60 * 1000;
-  var MAX_ITEMS = 8;
+  var MAX_ITEMS = 16; // enough headlines to mix sources
   var MIN_ROTATE_ITEMS = 3; // below this, keep the best headline still
   var MAX_CHARS = 80;
 

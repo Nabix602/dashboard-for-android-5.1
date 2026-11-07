@@ -125,7 +125,7 @@ Si la météo ne répond pas, la carte reste masquée.
 
 ## Système d'actualités
 
-- Source : flux RSS publics (Numerama, Le Monde Pixels, Le Monde Sciences), convertis en JSON par le service gratuit [rss2json](https://rss2json.com). Les flux technologie et sciences sont prioritaires ; un flux en échec est simplement ignoré.
+- Sources : flux RSS publics (BFMTV, France Info, Le Monde, Le Figaro, L'Équipe, Numerama), convertis en JSON par le service gratuit [rss2json](https://rss2json.com). Les flux technologie et sciences sont prioritaires ; un flux en échec est simplement ignoré.
 - Sujets : technologie, sciences, France et actualité générale. Un filtre simple écarte les titres politiques ou de type « clickbait ».
 - Affichage : un titre court, la source et l'heure de publication.
 - Rotation : toutes les 15 minutes, avec un fondu doux. Le texte ne change jamais brusquement.
@@ -134,7 +134,7 @@ Si la météo ne répond pas, la carte reste masquée.
 - Actualisation des flux : toutes les heures. Après une actualisation, le titre affiché reste le même et la rotation continue dans le même ordre.
 - Hors ligne : la carte est masquée.
 
-Les adresses des flux doivent être vérifiées et peuvent être modifiées dans le tableau `FEEDS` de `news.js`.
+Les adresses des flux doivent être vérifiées (celles-ci ne l'ont pas encore été) et peuvent être modifiées dans le tableau `FEEDS` de `news.js`.
 
 ## Plein écran
 
