@@ -296,6 +296,10 @@
         return;
       }
       if (xhr.status !== 200) {
+        // Visible only in the browser console (F12). Status 0 usually means the browser blocked the request (CORS).
+        if (window.console && console.warn) {
+          console.warn('Last.fm request failed, status:', xhr.status);
+        }
         setNowPlaying(null);
         return;
       }
