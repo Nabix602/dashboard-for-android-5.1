@@ -638,14 +638,14 @@ body.night #net {
 #side {
   position: fixed;
   left: 4vw;
-  top: 18vh;
-  bottom: 4vh;
+  top: 15vh;
+  bottom: 0;
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
-  -webkit-justify-content: flex-start;
-  justify-content: flex-start;
+  -webkit-justify-content: center;
+  justify-content: center;
   width: 18vw;
   -webkit-flex: none;
   flex: none;
