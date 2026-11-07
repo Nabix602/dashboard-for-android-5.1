@@ -248,7 +248,7 @@
   // Three layouts, each with at most three short lines:
   //   upcoming:  ⚽ PSG vs Arsenal   /  Aujourd'hui · 16:00
   //   live:      🔴 LIVE            /  PSG 2 - 1 Arsenal  /  78'
-  //   finished:  ✅ Full Time       /  PSG 3 - 1 Arsenal
+  //   finished:  ✅ PSG 3 - 1 Arsenal
   function render() {
     var now = Date.now();
     var p = pick(now);
@@ -282,8 +282,8 @@
         ? dayLabel(m.kickoff) + ' · ' + timeLabel(m.kickoff)
         : dayLabel(m.kickoff);
     } else {
-      label = '✅ Full Time';
-      main = scoreLine(m);
+      label = '✅ ' + scoreLine(m);
+      main = '';
     }
 
     var key = label + '|' + main + '|' + detail;

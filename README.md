@@ -132,7 +132,7 @@ Si la météo ne répond pas, la carte reste masquée.
 - La carte est petite et discrète. Elle n'apparaît que dans ces cas :
   - **48 heures avant** le coup d'envoi : `⚽ PSG vs Arsenal` et « Aujourd'hui · 16:00 » ;
   - **pendant le match** : `🔴 LIVE`, le score et la minute estimée ;
-  - **24 heures après** la fin du match : `✅ Full Time` et le score final.
+  - **24 heures après** la fin du match : `✅ PSG 3 - 1 Arsenal`.
 - Hors de ces périodes, la carte est masquée.
 - La minute en direct est estimée à partir de l'heure de coup d'envoi, sans donnée officielle. Elle peut être légèrement décalée.
 - Si les données ne sont pas disponibles, la carte est simplement masquée.
@@ -145,7 +145,7 @@ Si la météo ne répond pas, la carte reste masquée.
 - Rotation : toutes les 15 minutes, avec un fondu doux. Le texte ne change jamais brusquement.
 - Si moins de 3 titres sont disponibles, la rotation s'arrête et le titre le plus récent reste affiché.
 - Si la source ne répond pas, la carte est masquée sans message d'erreur.
-- Actualisation des flux : toutes les heures.
+- Actualisation des flux : toutes les heures. Après une actualisation, le titre affiché reste le même et la rotation continue dans le même ordre.
 - Hors ligne : la carte est masquée.
 
 Les adresses des flux doivent être vérifiées et peuvent être modifiées dans le tableau `FEEDS` de `news.js`. Le service rss2json a des limites d'usage gratuit. Si elles sont atteintes, la carte est masquée jusqu'à la prochaine actualisation.

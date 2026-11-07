@@ -189,13 +189,13 @@
     lastQuoteIndex = idx;
 
     var q = list[idx];
-    var isArtist = q.category === 'Artist name';
+    var isArtist = q.category === 'Artist name' || !!q.song;
     var quoteEl = $('quote');
     if (quoteEl) {
       quoteEl.className = isArtist ? 'card optional artist' : 'card optional';
     }
     setText($('quote-text'), '« ' + q.text + ' »');
-    setText($('quote-meta'), isArtist ? '🎵 ' + q.author.toUpperCase() : (q.author === q.category ? q.author : q.author + '  ·  ' + q.category));
+    setText($('quote-meta'), isArtist ? '🎵 ' + q.author : (q.author === q.category ? q.author : q.author + '  ·  ' + q.category));
     setText($('quote-song'), isArtist && q.song ? q.song : '');
     show($('quote-song'), !!(isArtist && q.song));
     show($('quote-badge'), daily);
