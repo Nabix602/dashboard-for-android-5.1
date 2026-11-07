@@ -78,28 +78,60 @@
     }
   }
 
-  // Album art cross-fade.
-  function setArt(url) {
-    var art = $('sp-art');
-    if (!art) {
-      return;
-    }
-    var bg = url ? 'url("' + url + '")' : 'none';
-    if (art.getAttribute('data-bg') === bg) {
-      return;
-    }
-    art.setAttribute('data-bg', bg);
-    if (!art.getAttribute('data-init')) {
-      art.setAttribute('data-init', '1');
-      art.style.backgroundImage = bg;
-      return;
-    }
-    art.style.opacity = '0';
-    window.setTimeout(function () {
-      art.style.backgroundImage = bg;
-      art.style.opacity = '1';
-    }, 500);
+  // Album art: the new picture fades in over the old one, no dip to black.
+  // Missing or failing artwork shows the elegant placeholder.
+  var artUrl = null;
+  var artReady = false;
+  var artToken = 0;
+
+  function paintLayer(el, url) {
+    el.className = 'sp-layer' + (url ? '' : ' empty');
+    el.style.backgroundImage = url ? 'url("' + url + '")' : 'none';
   }
+
+  function setArt(url) {
+    var a = $('sp-a');
+    var b = $('sp-b');
+    if (!a || !b || url === artUrl) {
+      return;
+    }
+    artUrl = url;
+    var token = ++artToken;
+
+    var reveal = function (ok) {
+      if (token !== artToken) {
+        return;
+      }
+      var u = ok ? url : '';
+      if (!artReady) {
+        artReady = true;
+        paintLayer(a, u);
+        return;
+      }
+      paintLayer(b, u);
+      b.style.opacity = '1';
+      window.setTimeout(function () {
+        if (token !== artToken) {
+          return;
+        }
+        paintLayer(a, u);
+        b.style.transition = 'none';
+        b.style.opacity = '0';
+        void b.offsetWidth;
+        b.style.transition = '';
+      }, 950);
+    };
+
+    if (!url) {
+      reveal(false);
+      return;
+    }
+    var img = new Image();
+    img.onload = function () { reveal(true); };
+    img.onerror = function () { reveal(false); };
+    img.src = url;
+  }
+
 
   /* ---------- Body classes ---------- */
 
@@ -234,6 +266,13 @@
       setText($('sp-title'), track.name);
       setText($('sp-artist'), track.artist);
       setArt(track.image);
+      var bar0 = $('sp-bar');
+      if (bar0) {
+        bar0.style.transition = 'none';
+        bar0.style.width = '0%';
+        void bar0.offsetWidth;
+        bar0.style.transition = '';
+      }
       fetchDuration(track, key);
       updateProgress();
     }
@@ -384,13 +423,15 @@
     if (bar) {
       bar.style.width = known ? (elapsed / trackDuration * 100).toFixed(2) + '%' : '0%';
     }
-    show($('sp-track'), known);
+    var track = $('sp-track');
+    if (track) {
+      track.style.opacity = known ? '1' : '0';
+    }
     var timeEl = $('sp-time');
     var text = known ? fmtTime(elapsed) + ' / ' + fmtTime(trackDuration) : '';
     if (timeEl && timeEl.textContent !== text) {
       timeEl.textContent = text;
     }
-    show(timeEl, known);
   }
 
   /* ---------- Screen saver ---------- */

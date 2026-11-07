@@ -10,8 +10,8 @@ Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans 
 - **Météo** de Gazeran (Yvelines), mise à jour toutes les 15 minutes, avec une teinte d'ambiance selon le temps (chaude pour le soleil, bleue pour la pluie, grise pour les nuages).
 - **Actualités** : un titre à la fois, avec la source et l'heure de publication, qui change toutes les 10 minutes. La carte est masquée hors ligne.
 - **Citations** en français : une citation par heure, et une « Citation du jour » mise en avant chaque matin entre 07:00 et 09:00.
-- **Spotify** (optionnel) : pendant la lecture, l'heure se réduit et la pochette du morceau devient l'élément principal, avec le titre, l'artiste et le temps écoulé. Sans configuration, ou si rien ne joue, la carte est remplacée par les citations.
-- **PSG** : prochain match, match en direct ou résultat de la veille, avec la compétition, l'adversaire, la date et l'heure. La carte n'apparaît que dans une fenêtre autour des matchs.
+- **Spotify** (optionnel) : pendant la lecture, l'heure se réduit et la pochette du morceau devient l'élément principal, avec le titre, l'artiste et le temps écoulé. Sans configuration, ou si rien ne joue, la carte est remplacée par les citations. La pochette est agrandie et centrée ; si elle ne charge pas, un visuel sobre remplace le carré noir. Lors d'un changement de morceau, la nouvelle pochette apparaît en fondu par-dessus l'ancienne.
+- **PSG** : petite pastille flottante en haut à droite, sans carte, jamais permanente : prochain match, match en direct ou résultat de la veille, avec la compétition, l'adversaire, la date et l'heure. La carte n'apparaît que dans une fenêtre autour des matchs.
 - **Mode nuit** de 21:30 à 07:00 : fond noir, seules l'heure, la date et la météo restent visibles.
 - **Mode veille** : après 30 minutes sans morceau ni match, le tableau de bord ne garde que l'heure, la météo et une citation. Il revient seul quand Spotify ou un match démarre.
 - **Plein écran** : géré par le navigateur, sans bouton à l'écran.
@@ -139,7 +139,7 @@ Si la météo ne répond pas, la carte reste masquée.
 
 ## Système d'actualités
 
-- Source : flux RSS publics (Numerama, Le Monde Pixels, Le Monde Sciences), convertis en JSON par le service gratuit [rss2json](https://rss2json.com).
+- Source : flux RSS publics (BFM Tech, Numerama, Le Monde Pixels, Le Monde Sciences, France Info Sciences, Le Figaro High-Tech), convertis en JSON par le service gratuit [rss2json](https://rss2json.com). Les flux technologie et sciences sont prioritaires ; un flux en échec est simplement ignoré.
 - Sujets : technologie, sciences, France et actualité générale. Un filtre simple écarte les titres politiques ou de type « clickbait ».
 - Affichage : un titre court, la source et l'heure de publication.
 - Rotation : toutes les 15 minutes, avec un fondu doux. Le texte ne change jamais brusquement.
@@ -148,7 +148,7 @@ Si la météo ne répond pas, la carte reste masquée.
 - Actualisation des flux : toutes les heures. Après une actualisation, le titre affiché reste le même et la rotation continue dans le même ordre.
 - Hors ligne : la carte est masquée.
 
-Les adresses des flux doivent être vérifiées et peuvent être modifiées dans le tableau `FEEDS` de `news.js`. Le service rss2json a des limites d'usage gratuit. Si elles sont atteintes, la carte est masquée jusqu'à la prochaine actualisation.
+Les adresses des flux de BFM Tech, France Info et Le Figaro n'ont pas encore été vérifiées : contrôlez-les et corrigez-les dans le tableau `FEEDS` de `news.js` si besoin. Le service rss2json a des limites d'usage gratuit. Si elles sont atteintes, la carte est masquée jusqu'à la prochaine actualisation.
 
 ## Plein écran
 

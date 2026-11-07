@@ -4,9 +4,13 @@
   // Free public feeds, converted to JSON by rss2json (no key needed for light use).
   // Technology, science and France. Verify these URLs before relying on them.
   var FEEDS = [
+    'https://www.bfmtv.com/rss/tech/',
     'https://www.numerama.com/feed/',
     'https://www.lemonde.fr/pixels/rss_full.xml',
-    'https://www.lemonde.fr/sciences/rss_full.xml'
+    'https://www.lemonde.fr/sciences/rss_full.xml',
+    'https://www.francetvinfo.fr/sciences.rss',
+    'https://www.lefigaro.fr/rss/figaro_high-tech.xml'
+  
   ];
   var CONVERTER = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
