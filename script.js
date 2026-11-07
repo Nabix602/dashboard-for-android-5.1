@@ -245,6 +245,54 @@
     applyBodyClass();
   }
 
+  /* ---------- Artwork fallback: iTunes Search (public, no key) ---------- */
+
+  var artCache = {};
+
+  // Asks iTunes for the cover of a track Last.fm has no picture for.
+  // Calls cb(url) or cb('') on any failure. Results are cached per track.
+  function fetchFallbackArt(track, cb) {
+    var term = encodeURIComponent((track.artist + ' ' + track.name).trim());
+    var cacheKey = track.artist + '|' + track.name;
+    if (artCache.hasOwnProperty(cacheKey)) {
+      cb(artCache[cacheKey]);
+      return;
+    }
+    var xhr;
+    try {
+      xhr = new XMLHttpRequest();
+    } catch (e) {
+      cb('');
+      return;
+    }
+    xhr.open('GET', 'https://itunes.apple.com/search?entity=song&limit=1&term=' + term, true);
+    xhr.timeout = 8000;
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      var url = '';
+      if (xhr.status === 200) {
+        try {
+          var data = JSON.parse(xhr.responseText);
+          var r = data.results && data.results[0];
+          if (r && r.artworkUrl100) {
+            url = r.artworkUrl100.replace('100x100', '600x600');
+          }
+        } catch (e) {
+          url = '';
+        }
+      }
+      artCache[cacheKey] = url;
+      cb(url);
+    };
+    try {
+      xhr.send(null);
+    } catch (e) {
+      cb('');
+    }
+  }
+
   function setNowPlaying(track) {
     if (!track) {
       if (mediaActive) {
@@ -266,6 +314,13 @@
       setText($('sp-title'), track.name);
       setText($('sp-artist'), track.artist);
       setArt(track.image);
+      if (!track.image) {
+        fetchFallbackArt(track, function (url) {
+          if (lastTrackKey === key && url) {
+            setArt(url);
+          }
+        });
+      }
       var bar0 = $('sp-bar');
       if (bar0) {
         bar0.style.transition = 'none';
