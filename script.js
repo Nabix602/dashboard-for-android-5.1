@@ -5,8 +5,8 @@
   // (free Last.fm account, Spotify connected in Last.fm Settings > Applications).
   // Leave empty: the dashboard simply shows quotes.
   var CONFIG = {
-    lastfmApiKey: '',
-    lastfmUser: ''
+    lastfmApiKey: 'ed3fbf6769fe8f50b8b688be7da068b7',
+    lastfmUser: 'Nabixxxx'
   };
 
   var DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
