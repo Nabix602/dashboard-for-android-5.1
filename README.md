@@ -180,11 +180,28 @@ Ouvrez `quotes.js`. Chaque citation a la forme suivante :
 }
 ```
 
+Catégories autorisées : `Proverbe français`, `Philosophie`, `Littérature`, `Phrase originale`, `Artist name`.
+
+### Citations d'artistes
+
+Pour une citation d'artiste, utilisez `category: 'Artist name'`, mettez le nom de l'artiste dans `author` et le titre du morceau dans `song`. La citation s'affiche avec un badge musical et un style distinct :
+
+```javascript
+{
+  text: 'Votre citation.',
+  author: 'NOM DE L\'ARTISTE',
+  song: 'Titre du morceau',
+  category: 'Artist name'
+}
+```
+
+Le projet ne fournit aucune citation d'artiste : ajoutez uniquement des textes exacts que vous avez le droit d'utiliser. Une courte citation ou une paraphrase reste préférable à la reproduction de paroles.
+
 Vous pouvez modifier la liste `QUOTES`, ou remplir `USER_QUOTES` : si cette liste contient au moins une citation, elle remplace la liste par défaut.
 
 ```javascript
 var USER_QUOTES = [
-  { text: 'Votre citation.', author: 'Auteur réel', category: 'Discipline' }
+  { text: 'Votre citation.', author: 'Auteur réel', category: 'Philosophie' }
 ];
 ```
 

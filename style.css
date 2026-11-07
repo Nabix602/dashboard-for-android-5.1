@@ -333,6 +333,36 @@ body.playing #ambient-glow {
   margin: 0 0 2.4vh 0;
 }
 
+/* Artist quotes: sans-serif, blue music badge, song title underneath */
+#quote.artist .quote-text {
+  font-family: "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+#quote.artist .quote-meta {
+  display: inline-block;
+  -webkit-align-self: flex-start;
+  align-self: flex-start;
+  color: #7fb0f0;
+  background: rgba(74, 143, 231, 0.14);
+  border-radius: 999px;
+  padding: 0.6vh 1.6vw;
+  letter-spacing: 0.1em;
+}
+
+#quote.artist .quote-meta::before {
+  display: none;
+}
+
+.quote-song {
+  font-size: 2.4vh;
+  font-style: italic;
+  color: #aeaeb2;
+  margin: 1.2vh 0 0 0;
+}
+
 /* Spotify: the hero element while music plays */
 #spotify {
   position: absolute;
