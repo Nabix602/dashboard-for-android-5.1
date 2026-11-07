@@ -593,6 +593,11 @@ body.night #app {
   background: #000;
 }
 
+/* Night: cards drop their grey panel so only the content shows on black */
+body.night .card {
+  background: transparent;
+}
+
 body.night .optional {
   display: none !important;
 }
