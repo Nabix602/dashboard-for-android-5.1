@@ -165,8 +165,47 @@
     }
   }
 
+  /* ---------- Seconds ring around the clock ---------- */
+
+  var tickEls = [];
+  var lastSec = -1;
+
+  // 30 ticks on the top edge (left to right) then 30 on the bottom edge (right to left).
+  function setupTicks() {
+    var box = $('ticks');
+    if (!box) {
+      return;
+    }
+    for (var s = 0; s < 60; s++) {
+      var el = document.createElement('i');
+      var pos;
+      if (s < 30) {
+        pos = ((s + 0.5) / 30) * 100;
+        el.className = 'top';
+      } else {
+        pos = 100 - ((s - 30 + 0.5) / 30) * 100;
+        el.className = 'bottom';
+      }
+      el.style.left = pos + '%';
+      box.appendChild(el);
+      tickEls.push(el);
+    }
+  }
+
+  function updateTicks(sec) {
+    if (sec === lastSec || !tickEls.length) {
+      return;
+    }
+    if (lastSec >= 0) {
+      tickEls[lastSec].className = tickEls[lastSec].className.replace(' on', '');
+    }
+    tickEls[sec].className += ' on';
+    lastSec = sec;
+  }
+
   function tickClock() {
     var d = new Date();
+    updateTicks(d.getSeconds());
     var minutes = d.getHours() * 60 + d.getMinutes();
     if (minutes !== lastMinute) {
       lastMinute = minutes;
@@ -788,5 +827,6 @@
     updateSun();
     window.setInterval(updateSun, 60000);
     setupSettings();
+    setupTicks();
   };
 })();
