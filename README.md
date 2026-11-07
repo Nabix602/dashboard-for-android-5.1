@@ -129,11 +129,11 @@ Si la météo ne répond pas, la carte reste masquée.
 
 - Source : [TheSportsDB](https://www.thesportsdb.com), avec la clé publique `123`.
 - Identifiant de l'équipe : `TEAM_ID` dans `psg.js`. La valeur par défaut doit être vérifiée sur TheSportsDB et remplacée si nécessaire.
-- Affichage : la carte apparaît dans la fenêtre suivante :
-  - 7 jours avant un match, avec le prochain match, la date et l'heure ;
-  - pendant le match, avec le score et la minute estimée (`⚽ LIVE`) ;
-  - 24 heures après un match, avec le résultat (`✅ Résultat`).
-- La compétition et l'adversaire sont affichés.
+- La carte est petite et discrète. Elle n'apparaît que dans ces cas :
+  - **48 heures avant** le coup d'envoi : `⚽ PSG vs Arsenal` et « Aujourd'hui · 16:00 » ;
+  - **pendant le match** : `🔴 LIVE`, le score et la minute estimée ;
+  - **24 heures après** la fin du match : `✅ Full Time` et le score final.
+- Hors de ces périodes, la carte est masquée.
 - La minute en direct est estimée à partir de l'heure de coup d'envoi, sans donnée officielle. Elle peut être légèrement décalée.
 - Si les données ne sont pas disponibles, la carte est simplement masquée.
 

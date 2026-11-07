@@ -11,11 +11,11 @@
   var FAST_GAP_MS = 3 * 60000;
   var SLOW_GAP_MS = 20 * 60000;
   var TICK_MS = 60000;
-  var WINDOW_BEFORE_MS = 7 * DAY_MS;
-  var WINDOW_AFTER_MS = DAY_MS;
+  var WINDOW_BEFORE_MS = 2 * DAY_MS;   // show from 48 h before kickoff
+  var WINDOW_AFTER_MS = DAY_MS;        // keep showing 24 h after the final whistle
 
-  var DAYS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
-  var MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  var DAYS_SHORT = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+  var MONTHS_SHORT = ['janv', 'févr', 'mars', 'avr', 'mai', 'juin', 'juil', 'août', 'sept', 'oct', 'nov', 'déc'];
 
   var state = {
     nextList: [],
@@ -130,10 +130,9 @@
       kickoff: kickoff,
       hasTime: hasTime,
       psgHome: psgHome,
-      league: ev.strLeague || '',
+      opponent: psgHome ? (ev.strAwayTeam || '') : (ev.strHomeTeam || ''),
       home: shortName(ev.strHomeTeam),
       away: shortName(ev.strAwayTeam),
-      opponent: psgHome ? (ev.strAwayTeam || '') : (ev.strHomeTeam || ''),
       hs: toInt(ev.intHomeScore),
       as: toInt(ev.intAwayScore),
       status: ev.strStatus || ''
@@ -167,6 +166,8 @@
     return false;
   }
 
+  // Chooses at most one match to show: live first, then the next one within
+  // 48 h, then a finished one for 24 h after its end.
   function pick(now) {
     var list = allMatches();
     var live = null;
@@ -220,16 +221,13 @@
 
   function dayLabel(ts) {
     var d = new Date(ts);
-    var today = new Date();
-    if (sameDay(d, today)) {
+    if (sameDay(d, new Date())) {
       return "Aujourd'hui";
     }
-    var tomorrow = new Date(Date.now() + DAY_MS);
-    if (sameDay(d, tomorrow)) {
+    if (sameDay(d, new Date(Date.now() + DAY_MS))) {
       return 'Demain';
     }
-    var w = DAYS[d.getDay()];
-    return w.charAt(0).toUpperCase() + w.substr(1) + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()];
+    return DAYS_SHORT[d.getDay()] + ' ' + d.getDate() + ' ' + MONTHS_SHORT[d.getMonth()];
   }
 
   function timeLabel(ts) {
@@ -247,6 +245,10 @@
     return 'PSG ' + psgScore + ' - ' + oppScore + ' ' + opponentOf(m);
   }
 
+  // Three layouts, each with at most three short lines:
+  //   upcoming:  ⚽ PSG vs Arsenal   /  Aujourd'hui · 16:00
+  //   live:      🔴 LIVE            /  PSG 2 - 1 Arsenal  /  78'
+  //   finished:  ✅ Full Time       /  PSG 3 - 1 Arsenal
   function render() {
     var now = Date.now();
     var p = pick(now);
@@ -259,9 +261,8 @@
 
     var m = p.m;
     var label;
-    var main;
-    var comp = m.league;
-    var detail;
+    var main = '';
+    var detail = '';
 
     if (p.type === 'live') {
       var elapsed = Math.floor((now - m.kickoff) / 60000);
@@ -270,22 +271,22 @@
       }
       elapsed = Math.max(1, Math.min(90, elapsed));
 
-      label = '⚽ LIVE';
-      main = (m.hs !== null && m.as !== null) ? scoreLine(m) : 'PSG vs ' + opponentOf(m);
+      label = '🔴 LIVE';
+      if (m.hs !== null && m.as !== null) {
+        main = scoreLine(m);
+      }
       detail = elapsed + "'";
     } else if (p.type === 'next') {
-      label = '⚽ Prochain match';
-      main = m.psgHome ? 'PSG vs ' + opponentOf(m) : opponentOf(m) + ' vs PSG';
+      label = '⚽ ' + (m.psgHome ? 'PSG vs ' + opponentOf(m) : opponentOf(m) + ' vs PSG');
       detail = m.hasTime
         ? dayLabel(m.kickoff) + ' · ' + timeLabel(m.kickoff)
         : dayLabel(m.kickoff);
     } else {
-      label = '✅ Résultat';
+      label = '✅ Full Time';
       main = scoreLine(m);
-      detail = 'Terminé · ' + dayLabel(m.kickoff);
     }
 
-    var key = label + '|' + main + '|' + comp + '|' + detail;
+    var key = label + '|' + main + '|' + detail;
     if (key === lastKey) {
       show($('psg'), true);
       return;
@@ -294,8 +295,9 @@
 
     setText($('psg-label'), label);
     setText($('psg-match'), main);
-    setText($('psg-comp'), comp);
     setText($('psg-detail'), detail);
+    show($('psg-match'), !!main);
+    show($('psg-detail'), !!detail);
     show($('psg'), true);
   }
 

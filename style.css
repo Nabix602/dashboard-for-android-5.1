@@ -400,40 +400,40 @@ body.playing #ambient-glow {
   text-overflow: ellipsis;
 }
 
-/* PSG: quiet card with PSG blue accents */
+/* PSG: small tertiary widget, never dominant */
 #psg {
-  -webkit-flex: 0 0 22%;
-  flex: 0 0 22%;
-  width: 22%;
+  -webkit-flex: 0 0 auto;
+  flex: 0 0 auto;
+  width: 15%;
+  -webkit-align-self: center;
+  align-self: center;
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
   flex-direction: column;
   -webkit-justify-content: center;
   justify-content: center;
-  padding: 2vh 1.8vw;
-  box-shadow: inset 0 0 0 1px rgba(74, 143, 231, 0.16);
+  padding: 1.8vh 1.4vw;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 1px rgba(74, 143, 231, 0.14);
 }
 
 .psg-label {
-  font-size: 1.7vh;
-  color: #4a8fe7;
+  font-size: 1.8vh;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  color: #4a8fe7;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   margin: 0;
 }
 
 .psg-match {
-  font-size: 2.6vh;
+  font-size: 2.2vh;
   font-weight: 500;
   color: #e5e5ea;
-  margin: 1vh 0 0 0;
-}
-
-.psg-comp {
-  font-size: 1.7vh;
-  color: #5d7fa8;
   margin: 0.8vh 0 0 0;
   white-space: nowrap;
   overflow: hidden;
@@ -441,9 +441,12 @@ body.playing #ambient-glow {
 }
 
 .psg-detail {
-  font-size: 1.9vh;
-  color: #636366;
-  margin: 0.8vh 0 0 0;
+  font-size: 1.7vh;
+  color: #8e8e93;
+  margin: 0.6vh 0 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Internet status: tiny and discreet */
