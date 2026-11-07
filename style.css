@@ -712,3 +712,87 @@ body.night #net {
   color: #636366;
 }
 
+/* Settings button (same reveal rule as the fullscreen button) */
+#cfg {
+  position: fixed;
+  right: calc(2.5vw + 6.5vh);
+  top: 2.5vh;
+  z-index: 5;
+  width: 5vh;
+  height: 5vh;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #c7c7cc;
+  font-size: 2.4vh;
+  line-height: 5vh;
+  text-align: center;
+  padding: 0;
+  opacity: 0;
+  -webkit-transition: opacity 0.6s ease;
+  transition: opacity 0.6s ease;
+}
+
+#cfg.show {
+  opacity: 1;
+}
+
+/* Settings panel */
+#panel {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 10;
+  width: 40vw;
+  margin-left: -20vw;
+  margin-top: -14vh;
+  padding: 3.5vh 3vw;
+  box-sizing: border-box;
+  border-radius: 24px;
+  background: rgba(24, 24, 28, 0.96);
+  box-shadow: 0 2vh 6vh rgba(0, 0, 0, 0.6);
+  color: #f2f2f7;
+}
+
+#panel.open {
+  display: block;
+}
+
+.panel-row {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+  padding: 1.6vh 0;
+  font-size: 2.4vh;
+}
+
+.panel-ctl button,
+#panel-close {
+  border: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #f2f2f7;
+  font-size: 2.2vh;
+  padding: 1vh 1.6vw;
+}
+
+.panel-ctl button {
+  margin: 0 1vw;
+}
+
+#dim-val {
+  display: inline-block;
+  min-width: 7vw;
+  text-align: center;
+  color: #aeaeb2;
+}
+
+#panel-close {
+  display: block;
+  margin: 2.5vh auto 0 auto;
+}
+

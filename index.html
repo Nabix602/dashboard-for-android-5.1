@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Dashboard Esteban</title>
-<link rel="stylesheet" href="style.css?v=9">
+<link rel="stylesheet" href="style.css?v=10">
 </head>
 <body>
 <div id="splash"><p>dashboard-for-android-5</p><span class="splash-credit">Made by Esteban W</span></div>
@@ -57,11 +57,24 @@
   <div id="net" style="display:none"></div>
 
   <button id="fs" type="button" aria-label="Plein écran" style="display:none">⛶</button>
+  <button id="cfg" type="button" aria-label="Réglages" style="display:none">⚙</button>
+
+  <div id="panel">
+    <div class="panel-row">
+      <span>Luminosité</span>
+      <span class="panel-ctl"><button id="dim-down" type="button">−</button><span id="dim-val">100 %</span><button id="dim-up" type="button">+</button></span>
+    </div>
+    <div class="panel-row">
+      <span>Citations</span>
+      <span class="panel-ctl"><button id="q-toggle" type="button">Affichées</button></span>
+    </div>
+    <button id="panel-close" type="button">Fermer</button>
+  </div>
 </div>
 
 <script src="quotes.js?v=3"></script>
 <script src="weather.js?v=3"></script>
 <script src="news.js?v=3"></script>
-<script src="script.js?v=9"></script>
+<script src="script.js?v=10"></script>
 </body>
 </html>

@@ -240,7 +240,7 @@
 
   function applyMediaState() {
     fadeEl($('spotify'), mediaActive);
-    fadeEl($('quote'), !mediaActive && quoteList().length > 0);
+    fadeEl($('quote'), !mediaActive && quotesOn && quoteList().length > 0);
     playingOn = mediaActive;
     applyBodyClass();
   }
@@ -578,6 +578,85 @@
     onNetChange();
   }
 
+  /* ---------- Settings: brightness and quotes, saved on this device ---------- */
+
+  var quotesOn = true;
+  var dimLevel = 100;
+
+  function loadSettings() {
+    try {
+      var d = parseInt(window.localStorage.getItem('dimLevel'), 10);
+      if (!isNaN(d)) {
+        dimLevel = Math.max(40, Math.min(100, d));
+      }
+      quotesOn = window.localStorage.getItem('quotesOn') !== 'off';
+    } catch (e) {
+      // Storage unavailable: keep the defaults.
+    }
+  }
+
+  function saveSettings() {
+    try {
+      window.localStorage.setItem('dimLevel', String(dimLevel));
+      window.localStorage.setItem('quotesOn', quotesOn ? 'on' : 'off');
+    } catch (e) {
+      // Storage unavailable: settings last until the page reloads.
+    }
+  }
+
+  function applySettings() {
+    var f = dimLevel / 100;
+    var parts = [$('stage'), $('bottom')];
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i]) {
+        parts[i].style.opacity = String(f);
+      }
+    }
+    var val = $('dim-val');
+    if (val) {
+      val.textContent = dimLevel + ' %';
+    }
+    var q = $('q-toggle');
+    if (q) {
+      q.textContent = quotesOn ? 'Affichées' : 'Masquées';
+    }
+    applyMediaState();
+  }
+
+  function setupSettings() {
+    var cfg = $('cfg');
+    var panel = $('panel');
+    if (!cfg || !panel) {
+      return;
+    }
+    loadSettings();
+    applySettings();
+    show(cfg, true);
+
+    cfg.onclick = function (e) {
+      if (e && e.stopPropagation) { e.stopPropagation(); }
+      panel.className = 'open';
+    };
+    $('panel-close').onclick = function () {
+      panel.className = '';
+    };
+    $('dim-down').onclick = function () {
+      dimLevel = Math.max(40, dimLevel - 10);
+      saveSettings();
+      applySettings();
+    };
+    $('dim-up').onclick = function () {
+      dimLevel = Math.min(100, dimLevel + 10);
+      saveSettings();
+      applySettings();
+    };
+    $('q-toggle').onclick = function () {
+      quotesOn = !quotesOn;
+      saveSettings();
+      applySettings();
+    };
+  }
+
   /* ---------- Fullscreen button (touch or mouse only) ---------- */
 
   var fsTimer = null;
@@ -608,13 +687,20 @@
     }
     show(btn, true);
 
+    var cfgBtn = $('cfg');
     var reveal = function () {
       btn.className = 'show';
+      if (cfgBtn) {
+        cfgBtn.className = 'show';
+      }
       if (fsTimer) {
         window.clearTimeout(fsTimer);
       }
       fsTimer = window.setTimeout(function () {
         btn.className = '';
+        if (cfgBtn) {
+          cfgBtn.className = '';
+        }
       }, 3000);
     };
 
@@ -688,5 +774,6 @@
     setupFullscreen();
     updateSun();
     window.setInterval(updateSun, 60000);
+    setupSettings();
   };
 })();
