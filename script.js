@@ -158,7 +158,7 @@
   var lastMinute = -1;
 
   function updateNight(minutes) {
-    var on = minutes >= 21 * 60 + 30 || minutes < 7 * 60;
+    var on = nightAuto && (minutes >= 21 * 60 + 30 || minutes < 7 * 60);
     if (on !== nightOn) {
       nightOn = on;
       applyBodyClass();
@@ -511,12 +511,6 @@
       return;
     }
 
-    // Manual sleep mode from the settings: always on when nothing is playing.
-    if (saverPref) {
-      setSaver(true);
-      return;
-    }
-
     if (!idleSince) {
       idleSince = now;
     }
@@ -588,7 +582,7 @@
 
   var quotesOn = true;
   var dimLevel = 100;
-  var saverPref = false;
+  var nightAuto = true;
 
   function loadSettings() {
     try {
@@ -597,7 +591,7 @@
         dimLevel = Math.max(40, Math.min(100, d));
       }
       quotesOn = window.localStorage.getItem('quotesOn') !== 'off';
-      saverPref = window.localStorage.getItem('saverPref') === 'on';
+      nightAuto = window.localStorage.getItem('nightAuto') !== 'off';
     } catch (e) {
       // Storage unavailable: keep the defaults.
     }
@@ -607,7 +601,7 @@
     try {
       window.localStorage.setItem('dimLevel', String(dimLevel));
       window.localStorage.setItem('quotesOn', quotesOn ? 'on' : 'off');
-      window.localStorage.setItem('saverPref', saverPref ? 'on' : 'off');
+      window.localStorage.setItem('nightAuto', nightAuto ? 'on' : 'off');
     } catch (e) {
       // Storage unavailable: settings last until the page reloads.
     }
@@ -631,7 +625,7 @@
     }
     var v = $('v-toggle');
     if (v) {
-      v.textContent = saverPref ? 'Activé' : 'Désactivé';
+      v.textContent = nightAuto ? 'Activé' : 'Désactivé';
     }
     applyMediaState();
   }
@@ -664,10 +658,10 @@
       applySettings();
     };
     $('v-toggle').onclick = function () {
-      saverPref = !saverPref;
+      nightAuto = !nightAuto;
       saveSettings();
       applySettings();
-      checkSaver();
+      updateNight(lastMinute);
     };
     $('q-toggle').onclick = function () {
       quotesOn = !quotesOn;
