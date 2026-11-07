@@ -152,9 +152,15 @@ Le tableau de bord ne verrouille jamais Android et ne bloque pas la sortie.
 - Fond noir, seules l'heure, la date et la météo restent visibles.
 - Les cartes citation, Spotify et actualités sont masquées.
 
-## Mode veille
+## Réglages (bouton ⚙)
 
-Après 30 minutes sans morceau Spotify, le tableau de bord ne garde que l'heure, la date, la météo et une citation. Il revient automatiquement quand un morceau commence.
+Le bouton ⚙ apparaît quand on touche l'écran ou qu'on bouge la souris, à côté du bouton plein écran. Il ouvre un panneau avec :
+
+- **Luminosité** : de 40 % à 100 %, par pas de 10 %.
+- **Citations** : affichées ou masquées.
+- **Mode nuit auto (21 h 30 – 7 h)** : activé ou désactivé. Désactivé, le mode nuit ne s'applique plus, même la nuit.
+
+Les réglages sont gardés dans le navigateur de la tablette.
 
 ## Personnaliser les citations
 
@@ -204,6 +210,34 @@ Une citation change chaque heure. La « Citation du jour » est choisie automati
 - **Pas de météo** : vérifiez la connexion Internet et les coordonnées.
 - **Pas d'actualités** : vérifiez les adresses de `FEEDS` dans `news.js`.
 - **Animations lentes** : supprimez l'élément `#ambient-glow` dans `index.html` et son bloc CSS.
+
+## Télécharger le projet
+
+Depuis un terminal, sans compte GitHub :
+
+```bash
+# Avec Git
+git clone https://github.com/Nabix602/dashboard-for-android-5.1.git
+
+# Sans Git : archive ZIP de la branche main
+curl -L -o dashboard.zip https://github.com/Nabix602/dashboard-for-android-5.1/archive/refs/heads/main.zip
+unzip dashboard.zip
+```
+
+## Générer une APK
+
+Le dashboard est une page web statique : il suffit de l'envelopper dans une application Android. Une solution simple est Apache Cordova. Les étapes ci-dessous n'ont pas été testées sur ce projet ; elles demandent Node.js, Java JDK et le SDK Android.
+
+```bash
+npm install -g cordova
+cordova create dashboard-apk com.esteban.dashboard "Dashboard Esteban"
+cd dashboard-apk
+rm -rf www && cp -r /chemin/vers/dashboard-for-android-5.1 www
+cordova platform add android
+cordova build android
+```
+
+L'APK se trouve ensuite dans `platforms/android/app/build/outputs/apk/debug/`. Pour la tablette, activez l'installation depuis des sources inconnues. Vérifiez la compatibilité avec votre version d'Android avant d'installer.
 
 ## Licence
 
