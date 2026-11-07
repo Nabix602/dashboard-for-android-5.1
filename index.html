@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Dashboard Esteban</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="splash"><p>Dashboard Esteban</p></div>
+
+<div id="ambient-tint"></div>
+<div id="ambient-glow"></div>
+
+<div id="app">
+  <div id="safe"></div>
+
+  <div id="stage">
+    <div id="clock">--:--</div>
+    <div id="date"></div>
+  </div>
+
+  <div id="bottom">
+    <div id="side">
+      <div id="weather" class="card secondary" style="display:none">
+        <div id="weather-icon" class="w-icon"></div>
+        <div id="weather-temp" class="w-temp"></div>
+        <div id="weather-cond" class="w-cond"></div>
+      </div>
+
+      <div id="news" class="card secondary optional saver-hide" style="display:none">
+        <p id="news-source" class="news-source fx"></p>
+        <p id="news-title" class="news-title fx"></p>
+      </div>
+    </div>
+
+    <div id="middle">
+      <div id="spotify" class="card optional saver-hide" style="display:none">
+        <div id="sp-art"></div>
+        <div class="sp-info">
+          <p class="sp-label">En cours d'écoute</p>
+          <p id="sp-title" class="sp-title fx"></p>
+          <p id="sp-artist" class="sp-artist fx"></p>
+        </div>
+      </div>
+
+      <div id="quote" class="card optional">
+        <p id="quote-badge" class="badge" style="display:none">✨ Citation du jour</p>
+        <p id="quote-text" class="quote-text fx"></p>
+        <p id="quote-meta" class="quote-meta fx"></p>
+      </div>
+    </div>
+
+    <div id="psg" class="card secondary optional saver-hide" style="display:none">
+      <p id="psg-label" class="psg-label fx"></p>
+      <p id="psg-match" class="psg-match fx"></p>
+      <p id="psg-comp" class="psg-comp fx"></p>
+      <p id="psg-detail" class="psg-detail fx"></p>
+    </div>
+  </div>
+
+  <div id="controls">
+    <button id="btn-enter" type="button">Plein écran</button>
+    <button id="btn-exit" type="button" style="display:none">Quitter</button>
+  </div>
+
+  <div id="net" style="display:none"></div>
+</div>
+
+<script src="quotes.js"></script>
+<script src="weather.js"></script>
+<script src="psg.js"></script>
+<script src="news.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
