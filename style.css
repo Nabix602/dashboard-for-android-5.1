@@ -636,10 +636,16 @@ body.night #net {
 /* Layout centring: the Spotify / quote column is centred on the screen,
    the weather and news column sits on the left, nothing on the right. */
 #side {
-  position: absolute;
+  position: fixed;
   left: 4vw;
-  top: 0;
-  bottom: 0;
+  top: 18vh;
+  bottom: 4vh;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
   width: 18vw;
   -webkit-flex: none;
   flex: none;
