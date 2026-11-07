@@ -167,8 +167,19 @@
         unique.push(fresh[i]);
       }
     }
+    var oldTitle = items.length ? items[index % items.length].title : '';
+    var oldIndex = index;
     items = unique.slice(0, MAX_ITEMS);
     index = 0;
+    if (items.length) {
+      index = oldIndex % items.length;
+      for (var j = 0; j < items.length; j++) {
+        if (items[j].title === oldTitle) {
+          index = j;
+          break;
+        }
+      }
+    }
     fetching = false;
     render();
   }
