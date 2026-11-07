@@ -617,7 +617,15 @@
     var now = new Date();
     var rise = sunEvent(now, true);
     var set = sunEvent(now, false);
-    el.textContent = rise && set ? '☀ ' + hhmm(rise) + '   ☾ ' + hhmm(set) : '';
+    if (!rise || !set) {
+      el.innerHTML = '';
+      return;
+    }
+    var up = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20"/><path d="M6 18a6 6 0 0 1 12 0"/><path d="M12 11V4"/><path d="M9 7l3-3 3 3"/></svg>';
+    var down = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 18h20"/><path d="M6 18a6 6 0 0 1 12 0"/><path d="M12 4v7"/><path d="M9 8l3 3 3-3"/></svg>';
+    el.innerHTML =
+      '<span class="sun-item">' + up + '<span>' + hhmm(rise) + '</span></span>' +
+      '<span class="sun-item">' + down + '<span>' + hhmm(set) + '</span></span>';
   }
 
   window.onload = function () {

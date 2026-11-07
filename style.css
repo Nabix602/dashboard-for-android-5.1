@@ -670,3 +670,32 @@ body.night #net {
   opacity: 1;
 }
 
+/* Sunrise and sunset in the weather card, Apple Weather style */
+#sun {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-top: 1.4vh;
+  font-size: 1.8vh;
+  color: #8e8e93;
+  letter-spacing: 0.02em;
+}
+
+#sun .sun-item {
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-align-items: center;
+  align-items: center;
+  margin-right: 2.2vw;
+}
+
+#sun svg {
+  width: 2.6vh;
+  height: 2.6vh;
+  margin-right: 0.6vw;
+  color: #aeaeb2;
+}
+
