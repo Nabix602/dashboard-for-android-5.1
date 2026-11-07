@@ -511,6 +511,12 @@
       return;
     }
 
+    // Manual sleep mode from the settings: always on when nothing is playing.
+    if (saverPref) {
+      setSaver(true);
+      return;
+    }
+
     if (!idleSince) {
       idleSince = now;
     }
@@ -582,6 +588,7 @@
 
   var quotesOn = true;
   var dimLevel = 100;
+  var saverPref = false;
 
   function loadSettings() {
     try {
@@ -590,6 +597,7 @@
         dimLevel = Math.max(40, Math.min(100, d));
       }
       quotesOn = window.localStorage.getItem('quotesOn') !== 'off';
+      saverPref = window.localStorage.getItem('saverPref') === 'on';
     } catch (e) {
       // Storage unavailable: keep the defaults.
     }
@@ -599,6 +607,7 @@
     try {
       window.localStorage.setItem('dimLevel', String(dimLevel));
       window.localStorage.setItem('quotesOn', quotesOn ? 'on' : 'off');
+      window.localStorage.setItem('saverPref', saverPref ? 'on' : 'off');
     } catch (e) {
       // Storage unavailable: settings last until the page reloads.
     }
@@ -619,6 +628,10 @@
     var q = $('q-toggle');
     if (q) {
       q.textContent = quotesOn ? 'Affichées' : 'Masquées';
+    }
+    var v = $('v-toggle');
+    if (v) {
+      v.textContent = saverPref ? 'Activé' : 'Désactivé';
     }
     applyMediaState();
   }
@@ -649,6 +662,12 @@
       dimLevel = Math.min(100, dimLevel + 10);
       saveSettings();
       applySettings();
+    };
+    $('v-toggle').onclick = function () {
+      saverPref = !saverPref;
+      saveSettings();
+      applySettings();
+      checkSaver();
     };
     $('q-toggle').onclick = function () {
       quotesOn = !quotesOn;
