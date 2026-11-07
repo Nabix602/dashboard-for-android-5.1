@@ -523,5 +523,58 @@
     onNetChange();
   }
 
-  window.onload = init;
+  /* ---------- Fullscreen button (touch or mouse only) ---------- */
+
+  var fsTimer = null;
+
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+
+  function toggleFullscreen() {
+    try {
+      if (isFullscreen()) {
+        (document.exitFullscreen || document.webkitExitFullscreen || function () {}).call(document);
+      } else {
+        var el = document.documentElement;
+        (el.requestFullscreen || el.webkitRequestFullscreen || function () {}).call(el);
+      }
+    } catch (e) {
+      // Fullscreen refused by the browser: nothing to do.
+    }
+  }
+
+  function setupFullscreen() {
+    var btn = $('fs');
+    var el = document.documentElement;
+    var supported = !!(el.requestFullscreen || el.webkitRequestFullscreen);
+    if (!btn || !supported) {
+      return;
+    }
+    show(btn, true);
+
+    var reveal = function () {
+      btn.className = 'show';
+      if (fsTimer) {
+        window.clearTimeout(fsTimer);
+      }
+      fsTimer = window.setTimeout(function () {
+        btn.className = '';
+      }, 3000);
+    };
+
+    btn.onclick = function (e) {
+      if (e && e.stopPropagation) { e.stopPropagation(); }
+      toggleFullscreen();
+      reveal();
+    };
+    document.addEventListener('mousemove', reveal);
+    document.addEventListener('touchstart', reveal);
+    document.addEventListener('touchmove', reveal);
+  }
+
+  window.onload = function () {
+    init();
+    setupFullscreen();
+  };
 })();

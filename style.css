@@ -645,3 +645,29 @@ body.night #net {
   -webkit-flex: none;
   flex: none;
 }
+
+/* Fullscreen button: appears on touch or mouse movement, then fades away */
+#fs {
+  position: fixed;
+  right: 2.5vw;
+  top: 2.5vh;
+  z-index: 5;
+  width: 5vh;
+  height: 5vh;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #c7c7cc;
+  font-size: 2.4vh;
+  line-height: 5vh;
+  text-align: center;
+  padding: 0;
+  opacity: 0;
+  -webkit-transition: opacity 0.6s ease;
+  transition: opacity 0.6s ease;
+}
+
+#fs.show {
+  opacity: 1;
+}
+
