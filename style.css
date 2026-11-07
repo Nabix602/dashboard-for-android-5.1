@@ -555,58 +555,6 @@ body.playing #bottom {
   padding-bottom: 1vh;
 }
 
-/* PSG: small floating chip, top-right, never competes with Spotify */
-#psg {
-  position: absolute;
-  right: 4vw;
-  top: 1vh;
-  z-index: 2;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-flex-direction: column;
-  flex-direction: column;
-  -webkit-align-items: center;
-  align-items: center;
-  max-width: 22vw;
-  padding: 0.8vh 1.4vw;
-  border-radius: 999px;
-  background: rgba(74, 143, 231, 0.10);
-  text-align: center;
-}
-
-.psg-label {
-  font-size: 1.4vh;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: #4a8fe7;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.psg-match {
-  font-size: 1.6vh;
-  font-weight: 500;
-  color: #c9dcf5;
-  margin: 0.3vh 0 0 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.psg-detail {
-  font-size: 1.3vh;
-  color: #6f8fb8;
-  margin: 0.3vh 0 0 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
 
 /* Internet status: tiny and discreet */
 #net {
@@ -673,4 +621,27 @@ body.night #weather {
 
 body.night #net {
   opacity: 0.15;
+}
+
+/* Layout centring: the Spotify / quote column is centred on the screen,
+   the weather and news column sits on the left, nothing on the right. */
+#side {
+  position: absolute;
+  left: 4vw;
+  top: 0;
+  bottom: 0;
+  width: 18vw;
+  -webkit-flex: none;
+  flex: none;
+}
+
+#middle {
+  position: absolute;
+  left: 25%;
+  width: 50%;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  -webkit-flex: none;
+  flex: none;
 }

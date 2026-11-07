@@ -438,11 +438,6 @@
 
   var idleSince = 0;
 
-  function psgVisible() {
-    var el = $('psg');
-    return !!el && el.style.display !== 'none';
-  }
-
   function setSaver(on) {
     if (on === saverOn) {
       return;
@@ -453,7 +448,7 @@
 
   function checkSaver() {
     var now = Date.now();
-    var active = mediaActive || psgVisible();
+    var active = mediaActive;
 
     if (active) {
       idleSince = 0;
@@ -511,9 +506,6 @@
 
     if (window.Weather) {
       Weather.init();
-    }
-    if (window.PSG) {
-      PSG.init();
     }
     if (window.News) {
       News.init();

@@ -1,6 +1,6 @@
 # Dashboard Esteban
 
-Tableau de bord « smart display » pour une vieille tablette Android en mode paysage. Il affiche l'heure, la date, la météo, des actualités, des citations, les matchs du PSG et, en option, le morceau en cours d'écoute sur Spotify.
+Tableau de bord « smart display » pour une vieille tablette Android en mode paysage. Il affiche l'heure, la date, la météo, des actualités, des citations, en option, le morceau en cours d'écoute sur Spotify.
 
 Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans npm, sans étape de compilation et sans serveur.
 
@@ -11,7 +11,6 @@ Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans 
 - **Actualités** : un titre à la fois, avec la source et l'heure de publication, qui change toutes les 10 minutes. La carte est masquée hors ligne.
 - **Citations** en français : une citation par heure, et une « Citation du jour » mise en avant chaque matin entre 07:00 et 09:00.
 - **Spotify** (optionnel) : pendant la lecture, l'heure se réduit et la pochette du morceau devient l'élément principal, avec le titre, l'artiste et le temps écoulé. Sans configuration, ou si rien ne joue, la carte est remplacée par les citations. La pochette est agrandie et centrée ; si elle ne charge pas, un visuel sobre remplace le carré noir. Lors d'un changement de morceau, la nouvelle pochette apparaît en fondu par-dessus l'ancienne.
-- **PSG** : petite pastille flottante en haut à droite, sans carte, jamais permanente : prochain match, match en direct ou résultat de la veille, avec la compétition, l'adversaire, la date et l'heure. La carte n'apparaît que dans une fenêtre autour des matchs.
 - **Mode nuit** de 21:30 à 07:00 : fond noir, seules l'heure, la date et la météo restent visibles.
 - **Mode veille** : après 30 minutes sans morceau ni match, le tableau de bord ne garde que l'heure, la météo et une citation. Il revient seul quand Spotify ou un match démarre.
 - **Plein écran** : géré par le navigateur, sans bouton à l'écran.
@@ -21,7 +20,7 @@ Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans 
 ## Configuration requise
 
 - Une tablette ou un navigateur capable d'afficher une page web. Le projet vise Android 5.1 (Remix OS) et fonctionne aussi sur un ordinateur ou un téléphone récent.
-- Une connexion Internet pour la météo, les actualités, le PSG et Spotify. Sans connexion, l'horloge et les citations fonctionnent toujours.
+- Une connexion Internet pour la météo, les actualités, et Spotify. Sans connexion, l'horloge et les citations fonctionnent toujours.
 - Aucun compte n'est obligatoire. Last.fm et les services de données sont optionnels.
 
 ## Compatibilité Android 5.1
@@ -53,7 +52,7 @@ Puis ouvrez `http://IP_DE_VOTRE_PC:8000` sur la tablette.
 ## Déployer sur GitHub Pages
 
 1. Créez un dépôt public nommé, par exemple, `dashboard-esteban`.
-2. Ajoutez les fichiers du projet à la racine du dépôt : `index.html`, `style.css`, `script.js`, `quotes.js`, `weather.js`, `psg.js`, `news.js`.
+2. Ajoutez les fichiers du projet à la racine du dépôt : `index.html`, `style.css`, `script.js`, `quotes.js`, `weather.js`, `news.js`.
 3. Dans **Settings > Pages**, choisissez **Deploy from a branch**, la branche `main` et le dossier `/ (root)`.
 4. Attendez quelques minutes. L'adresse sera de la forme `https://VOTRE-NOM.github.io/dashboard-esteban/`.
 5. Ouvrez cette adresse sur la tablette, puis passez en plein écran via le navigateur si besoin.
@@ -70,18 +69,16 @@ dashboard-esteban/
 ├── script.js
 ├── quotes.js
 ├── weather.js
-├── psg.js
 └── news.js
 ```
 
 Rôle des fichiers :
 
-- `index.html` : structure de la page et chargement des scripts dans cet ordre : `quotes.js`, `weather.js`, `psg.js`, `news.js`, `script.js`.
+- `index.html` : structure de la page et chargement des scripts dans cet ordre : `quotes.js`, `weather.js`, `news.js`, `script.js`.
 - `style.css` : apparence, animations, mode nuit, mode veille.
 - `script.js` : horloge, mode nuit, citations, Spotify via Last.fm, mode veille, indicateur de connexion, et démarrage. Il coordonne les autres modules.
 - `quotes.js` : liste des citations et liste personnelle `USER_QUOTES`.
 - `weather.js` : météo Open-Meteo et teinte d'ambiance.
-- `psg.js` : matchs du PSG via TheSportsDB.
 - `news.js` : actualités via des flux RSS convertis en JSON.
 
 ## Spotify et Last.fm
@@ -125,21 +122,10 @@ Tant que `lastfmApiKey` ou `lastfmUser` reste vide, le tableau de bord affiche s
 
 Si la météo ne répond pas, la carte reste masquée.
 
-## Système PSG
-
-- Source : [TheSportsDB](https://www.thesportsdb.com), avec la clé publique `123`.
-- Identifiant de l'équipe : `TEAM_ID` dans `psg.js`. La valeur par défaut doit être vérifiée sur TheSportsDB et remplacée si nécessaire.
-- La carte est petite et discrète. Elle n'apparaît que dans ces cas :
-  - **48 heures avant** le coup d'envoi : `⚽ PSG vs Arsenal` et « Aujourd'hui · 16:00 » ;
-  - **pendant le match** : `🔴 LIVE`, le score et la minute estimée ;
-  - **24 heures après** la fin du match : `✅ PSG 3 - 1 Arsenal`.
-- Hors de ces périodes, la carte est masquée.
-- La minute en direct est estimée à partir de l'heure de coup d'envoi, sans donnée officielle. Elle peut être légèrement décalée.
-- Si les données ne sont pas disponibles, la carte est simplement masquée.
 
 ## Système d'actualités
 
-- Source : flux RSS publics (BFM Tech, Numerama, Le Monde Pixels, Le Monde Sciences, France Info Sciences, Le Figaro High-Tech), convertis en JSON par le service gratuit [rss2json](https://rss2json.com). Les flux technologie et sciences sont prioritaires ; un flux en échec est simplement ignoré.
+- Source : flux RSS publics (Numerama, Le Monde Pixels, Le Monde Sciences), convertis en JSON par le service gratuit [rss2json](https://rss2json.com). Les flux technologie et sciences sont prioritaires ; un flux en échec est simplement ignoré.
 - Sujets : technologie, sciences, France et actualité générale. Un filtre simple écarte les titres politiques ou de type « clickbait ».
 - Affichage : un titre court, la source et l'heure de publication.
 - Rotation : toutes les 15 minutes, avec un fondu doux. Le texte ne change jamais brusquement.
@@ -148,7 +134,7 @@ Si la météo ne répond pas, la carte reste masquée.
 - Actualisation des flux : toutes les heures. Après une actualisation, le titre affiché reste le même et la rotation continue dans le même ordre.
 - Hors ligne : la carte est masquée.
 
-Les adresses des flux de BFM Tech, France Info et Le Figaro n'ont pas encore été vérifiées : contrôlez-les et corrigez-les dans le tableau `FEEDS` de `news.js` si besoin. Le service rss2json a des limites d'usage gratuit. Si elles sont atteintes, la carte est masquée jusqu'à la prochaine actualisation.
+Les adresses des flux doivent être vérifiées et peuvent être modifiées dans le tableau `FEEDS` de `news.js`.
 
 ## Plein écran
 
@@ -216,10 +202,9 @@ Une citation change chaque heure. La « Citation du jour » est choisie automati
 - **Écran noir au démarrage** : l'écran de démarrage dure environ 4 secondes. Patientez ou rechargez la page.
 - **Pas de carte Spotify** : vérifiez `CONFIG` dans `script.js` et que Spotify est connecté dans les réglages de Last.fm.
 - **Pas de météo** : vérifiez la connexion Internet et les coordonnées.
-- **Pas de PSG** : vérifiez `TEAM_ID` dans `psg.js` et l'affichage de la date du match.
 - **Pas d'actualités** : vérifiez les adresses de `FEEDS` dans `news.js`.
 - **Animations lentes** : supprimez l'élément `#ambient-glow` dans `index.html` et son bloc CSS.
 
 ## Licence
 
-Usage personnel. Les données proviennent de services tiers (Open-Meteo, TheSportsDB, Last.fm, rss2json et les éditeurs des flux RSS) soumis à leurs propres conditions.
+Usage personnel. Les données proviennent de services tiers (Open-Meteo, Last.fm, rss2json et les éditeurs des flux RSS) soumis à leurs propres conditions.
