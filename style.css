@@ -386,7 +386,7 @@ body.playing #ambient-glow {
   order: 1;
 }
 
-/* Spotify: the hero element while music plays */
+/* Spotify: now-playing view, large cover with title and artist below */
 #spotify {
   position: absolute;
   left: 0;
@@ -395,19 +395,24 @@ body.playing #ambient-glow {
   bottom: 0;
   display: -webkit-flex;
   display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
   -webkit-align-items: center;
   align-items: center;
-  padding: 1.5vh 2vw;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding: 2vh 2vw;
   min-width: 0;
   overflow: visible;
   background: transparent;
+  text-align: center;
 }
 
 #sp-art {
   -webkit-flex: 0 0 auto;
   flex: 0 0 auto;
-  width: 32vh;
-  height: 32vh;
+  width: 36vh;
+  height: 36vh;
   border-radius: 22px;
   background-color: #1c1c1e;
   background-size: cover;
@@ -418,39 +423,79 @@ body.playing #ambient-glow {
   transition: opacity 0.5s ease;
 }
 
-.sp-info {
-  -webkit-flex: 1 1 auto;
-  flex: 1 1 auto;
-  min-width: 0;
-  margin-left: 4vw;
-}
-
-.sp-label {
-  font-size: 1.8vh;
-  color: #0a84ff;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin: 0 0 2vh 0;
-}
-
 .sp-title {
-  font-size: 5.6vh;
+  -webkit-align-self: stretch;
+  align-self: stretch;
+  font-size: 3.6vh;
   font-weight: 600;
   letter-spacing: -0.01em;
-  margin: 0;
+  margin: 2.2vh 0 0 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .sp-artist {
-  font-size: 3vh;
+  -webkit-align-self: stretch;
+  align-self: stretch;
+  font-size: 2.4vh;
   color: #8e8e93;
-  margin: 1.2vh 0 0 0;
+  margin: 0.6vh 0 0 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+#sp-track {
+  width: 36vh;
+  height: 0.5vh;
+  margin-top: 2vh;
+  border-radius: 1vh;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+#sp-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 1vh;
+  background: #f2f2f7;
+  -webkit-transition: width 1s linear;
+  transition: width 1s linear;
+}
+
+.sp-time {
+  -webkit-align-self: stretch;
+  align-self: stretch;
+  font-size: 1.8vh;
+  color: #8e8e93;
+  margin: 1vh 0 0 0;
+}
+
+/* Music playing: the clock steps back and the now-playing view takes the space */
+#clock {
+  -webkit-transition: font-size 1.2s ease;
+  transition: font-size 1.2s ease;
+}
+
+#bottom {
+  -webkit-transition: height 1.2s ease, flex-basis 1.2s ease;
+  transition: height 1.2s ease, flex-basis 1.2s ease;
+}
+
+body.playing #clock {
+  font-size: 13vh;
+}
+
+body.playing #date {
+  font-size: 2.6vh;
+  margin-top: 1vh;
+}
+
+body.playing #bottom {
+  -webkit-flex: 0 0 62%;
+  flex: 0 0 62%;
+  height: 62%;
 }
 
 /* PSG: small tertiary widget, never dominant */

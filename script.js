@@ -115,7 +115,7 @@
     if (saverOn) {
       parts.push('saver');
     }
-    if (playingOn) {
+    if (playingOn && !nightOn) {
       parts.push('playing');
     }
     document.body.className = parts.join(' ');
@@ -218,6 +218,8 @@
       if (mediaActive) {
         mediaActive = false;
         lastTrackKey = '';
+        trackStart = 0;
+        trackDuration = 0;
         applyMediaState();
         checkSaver();
       }
@@ -227,9 +229,13 @@
     var key = track.artist + '|' + track.name + '|' + track.image;
     if (key !== lastTrackKey) {
       lastTrackKey = key;
+      trackStart = Date.now();
+      trackDuration = 0;
       setText($('sp-title'), track.name);
       setText($('sp-artist'), track.artist);
       setArt(track.image);
+      fetchDuration(track, key);
+      updateProgress();
     }
 
     if (!mediaActive) {
@@ -319,6 +325,74 @@
     }
   }
 
+  /* ---------- Track progress (estimated) ---------- */
+
+  var trackStart = 0;
+  var trackDuration = 0;
+
+  function fmtTime(sec) {
+    return Math.floor(sec / 60) + ':' + pad(sec % 60);
+  }
+
+  // Duration comes from Last.fm track.getInfo (fetched once per track).
+  function fetchDuration(track, key) {
+    if (!CONFIG.lastfmApiKey || !track.artist) {
+      return;
+    }
+    var xhr;
+    try {
+      xhr = new XMLHttpRequest();
+    } catch (e) {
+      return;
+    }
+    var url = 'https://ws.audioscrobbler.com/2.0/?method=track.getInfo' +
+      '&artist=' + encodeURIComponent(track.artist) +
+      '&track=' + encodeURIComponent(track.name) +
+      '&autocorrect=1&api_key=' + encodeURIComponent(CONFIG.lastfmApiKey) +
+      '&format=json';
+    xhr.open('GET', url, true);
+    xhr.timeout = 8000;
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4 || xhr.status !== 200) {
+        return;
+      }
+      try {
+        var info = JSON.parse(xhr.responseText).track;
+        var ms = info ? parseInt(info.duration, 10) : 0;
+        if (key === lastTrackKey && ms > 0) {
+          trackDuration = Math.round(ms / 1000);
+          updateProgress();
+        }
+      } catch (e) {}
+    };
+    try {
+      xhr.send(null);
+    } catch (e) {}
+  }
+
+  // Elapsed time is measured from when the track was first detected.
+  function updateProgress() {
+    if (!mediaActive || !trackStart) {
+      return;
+    }
+    var elapsed = Math.max(0, Math.floor((Date.now() - trackStart) / 1000));
+    var known = trackDuration > 0;
+    if (known) {
+      elapsed = Math.min(elapsed, trackDuration);
+    }
+    var bar = $('sp-bar');
+    if (bar) {
+      bar.style.width = known ? (elapsed / trackDuration * 100).toFixed(2) + '%' : '0%';
+    }
+    show($('sp-track'), known);
+    var timeEl = $('sp-time');
+    var text = known ? fmtTime(elapsed) + ' / ' + fmtTime(trackDuration) : '';
+    if (timeEl && timeEl.textContent !== text) {
+      timeEl.textContent = text;
+    }
+    show(timeEl, known);
+  }
+
   /* ---------- Screen saver ---------- */
 
   var idleSince = 0;
@@ -405,7 +479,8 @@
     }
 
     fetchNowPlaying();
-    window.setInterval(fetchNowPlaying, 30000);
+    window.setInterval(fetchNowPlaying, 15000);
+    window.setInterval(updateProgress, 1000);
 
     window.setInterval(checkSaver, SAVER_CHECK_MS);
     checkSaver();

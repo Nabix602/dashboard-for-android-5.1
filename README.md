@@ -10,7 +10,7 @@ Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans 
 - **Météo** de Gazeran (Yvelines), mise à jour toutes les 15 minutes, avec une teinte d'ambiance selon le temps (chaude pour le soleil, bleue pour la pluie, grise pour les nuages).
 - **Actualités** : un titre à la fois, avec la source et l'heure de publication, qui change toutes les 10 minutes. La carte est masquée hors ligne.
 - **Citations** en français : une citation par heure, et une « Citation du jour » mise en avant chaque matin entre 07:00 et 09:00.
-- **Spotify** (optionnel) : la pochette du morceau en cours d'écoute devient l'élément principal. Sans configuration, ou si rien ne joue, la carte est remplacée par les citations.
+- **Spotify** (optionnel) : pendant la lecture, l'heure se réduit et la pochette du morceau devient l'élément principal, avec le titre, l'artiste et le temps écoulé. Sans configuration, ou si rien ne joue, la carte est remplacée par les citations.
 - **PSG** : prochain match, match en direct ou résultat de la veille, avec la compétition, l'adversaire, la date et l'heure. La carte n'apparaît que dans une fenêtre autour des matchs.
 - **Mode nuit** de 21:30 à 07:00 : fond noir, seules l'heure, la date et la météo restent visibles.
 - **Mode veille** : après 30 minutes sans morceau ni match, le tableau de bord ne garde que l'heure, la météo et une citation. Il revient seul quand Spotify ou un match démarre.
@@ -111,7 +111,7 @@ Tant que `lastfmApiKey` ou `lastfmUser` reste vide, le tableau de bord affiche s
 ### Limites
 
 - Le délai entre le début d'un morceau et son apparition peut être de quelques dizaines de secondes.
-- Last.fm ne fournit pas la position de lecture : il n'y a donc pas de barre de progression.
+- Last.fm ne fournit pas la position de lecture : le temps affiché est estimé à partir du moment où le morceau est détecté. Il peut être décalé de quelques secondes, et il continue de défiler pendant une pause. La barre et la durée n'apparaissent que si Last.fm connaît la durée du morceau.
 - La requête est faite depuis le navigateur. Si Last.fm n'accepte pas ce type d'appel depuis votre domaine, la carte Spotify ne s'affichera jamais, sans erreur visible. Dans ce cas, les citations restent affichées.
 - L'usage de l'API Last.fm est réservé à un usage non commercial, conformément à ses conditions.
 
