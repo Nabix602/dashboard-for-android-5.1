@@ -43,12 +43,12 @@ Horloge, date, météo, lever et coucher du soleil, citations, actualités, morc
 git clone https://github.com/<votre-pseudo>/dashboard-for-android-5.5.git
 cd dashboard-for-android-5.5
 
-# 2. Configurer (clé et pseudo Last.fm, facultatifs)
+# 2. Tout configurer dans le terminal : Spotify, ville, photos
 ./setup.sh
 
-# 3. Tester dans le navigateur
-python3 -m http.server 8000
-# puis ouvrir http://localhost:8000
+# 3. Lancer le dashboard
+./setup.sh serve
+# puis ouvrir l'adresse affichée (ordinateur, ou tablette sur le même Wi-Fi)
 ```
 
 Sans Git : téléchargez l'archive ZIP de la branche principale.
@@ -117,18 +117,9 @@ Les réglages du bouton ⚙ sont gardés dans le navigateur de l'appareil.
 
 Quand aucun morceau ne joue, la colonne centrale affiche tes photos en fondu, toutes les 20 secondes, en noir et blanc.
 
-1. Crée un dossier `photos/` à la racine du projet et copies-y tes photos.
-2. Convertis-les en noir et blanc, pour que le rendu marche aussi sur les vieux navigateurs :
-   ```bash
-   convert photo.jpg -colorspace Gray -resize 1600x1600 photos/photo.jpg
-   ```
-   (ImageMagick requis. Sans ImageMagick, vous pouvez utiliser un éditeur d'images.)
-3. Liste-les dans `photos.js` :
-   ```js
-   var PHOTOS = ['photos/photo1.jpg', 'photos/photo2.jpg'];
-   ```
-
-Tant que la liste est vide, ce sont les citations qui s'affichent.
+Deux façons de les ajouter :
+- **Depuis les réglages** (bouton ⚙, ligne Photos, « Ajouter ») : tu choisis les photos dans la galerie ou sur la carte SD. Elles sont converties en noir et blanc dans le navigateur, et gardées sur cet appareil (12 photos maximum).
+- **Depuis le terminal** : `./setup.sh`, option 3, puis indique le dossier de tes photos. Elles sont copiées dans `photos/` et listées dans `photos.js`.
 
 ## Structure du projet
 

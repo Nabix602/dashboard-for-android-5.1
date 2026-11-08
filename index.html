@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Dashboard Esteban</title>
-<link rel="stylesheet" href="style.css?v=21">
+<link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 <div id="splash"><p>dashboard-for-android-5</p><span class="splash-credit">Made by Esteban W</span></div>
@@ -74,6 +74,11 @@
       <span class="panel-ctl"><button id="v-toggle" type="button">Désactivé</button></span>
     </div>
     <div class="panel-row">
+      <span>Photos <span id="p-count" class="panel-sub">0</span></span>
+      <span class="panel-ctl"><button id="p-add" type="button">Ajouter</button><button id="p-clear" type="button">Effacer</button></span>
+    </div>
+    <input id="p-file" type="file" accept="image/*" multiple style="display:none">
+    <div class="panel-row">
       <span>Citations</span>
       <span class="panel-ctl"><button id="q-toggle" type="button">Affichées</button></span>
     </div>
@@ -85,6 +90,6 @@
 <script src="weather.js?v=3"></script>
 <script src="photos.js?v=1"></script>
 <script src="news.js?v=3"></script>
-<script src="script.js?v=21"></script>
+<script src="script.js?v=22"></script>
 </body>
 </html>

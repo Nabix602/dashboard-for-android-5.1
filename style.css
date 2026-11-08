@@ -764,7 +764,7 @@ body.night #net {
   z-index: 10;
   width: 40vw;
   margin-left: -20vw;
-  margin-top: -14vh;
+  margin-top: -20vh;
   padding: 3.5vh 3vw;
   box-sizing: border-box;
   border-radius: 24px;
@@ -847,5 +847,11 @@ body.night #net {
   -webkit-filter: grayscale(100%);
   -webkit-transition: opacity 2s ease;
   transition: opacity 2s ease;
+}
+
+.panel-sub {
+  color: #8e8e93;
+  font-size: 1.8vh;
+  margin-left: 0.6vw;
 }
 

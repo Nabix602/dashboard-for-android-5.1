@@ -240,7 +240,7 @@
 
   function applyMediaState() {
     fadeEl($('spotify'), mediaActive);
-    var photosOn = typeof PHOTOS !== 'undefined' && PHOTOS.length > 0;
+    var photosOn = photoSources().length > 0;
     fadeEl($('photo'), !mediaActive && photosOn);
     fadeEl($('quote'), !mediaActive && !photosOn && quotesOn && quoteList().length > 0);
     playingOn = mediaActive;
@@ -621,6 +621,10 @@
     if (val) {
       val.textContent = dimLevel + ' %';
     }
+    var pc = $('p-count');
+    if (pc) {
+      pc.textContent = String(userPhotos().length);
+    }
     var q = $('q-toggle');
     if (q) {
       q.textContent = quotesOn ? 'Affichées' : 'Masquées';
@@ -664,6 +668,27 @@
       saveSettings();
       applySettings();
       updateNight(lastMinute);
+    };
+    $('p-add').onclick = function () {
+      $('p-file').click();
+    };
+    $('p-file').onchange = function () {
+      var input = $('p-file');
+      var picked = [];
+      for (var k = 0; input.files && k < input.files.length; k++) {
+        picked.push(input.files[k]);
+      }
+      input.value = '';
+      addPhotos(picked, function () {
+        applySettings();
+        photoIdx = 0;
+        showPhoto(0);
+      });
+    };
+    $('p-clear').onclick = function () {
+      storeUserPhotos([]);
+      applySettings();
+      photoIdx = 0;
     };
     $('q-toggle').onclick = function () {
       quotesOn = !quotesOn;
@@ -784,20 +809,107 @@
       '<span class="sun-item">' + down + '<span>' + hhmm(set) + '</span></span>';
   }
 
-  /* ---------- Photo slideshow ---------- */
+  /* ---------- Photo slideshow ----------
+     Sources: the files listed in photos.js, plus photos added from the
+     settings panel. Added photos are converted to black and white in the
+     browser and kept on this device. */
 
+  var PHOTO_KEY = 'userPhotos';
+  var PHOTO_MAX = 12;
   var photoCur = null;
   var photoIdx = 0;
 
-  // Crossfade: the incoming photo fades in while the current one fades out.
+  function userPhotos() {
+    try {
+      var raw = window.localStorage.getItem(PHOTO_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      return arr instanceof Array ? arr : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function storeUserPhotos(arr) {
+    try {
+      window.localStorage.setItem(PHOTO_KEY, JSON.stringify(arr));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function photoSources() {
+    var repo = (typeof PHOTOS !== 'undefined' && PHOTOS) ? PHOTOS : [];
+    return repo.concat(userPhotos());
+  }
+
+  // Resizes the picture and converts it to black and white (JPEG, small size).
+  function toGrayJpeg(img) {
+    var scale = Math.min(1, 900 / Math.max(img.width, img.height));
+    var w = Math.max(1, Math.round(img.width * scale));
+    var h = Math.max(1, Math.round(img.height * scale));
+    var canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, w, h);
+    var data = ctx.getImageData(0, 0, w, h);
+    var px = data.data;
+    for (var i = 0; i < px.length; i += 4) {
+      var g = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+      px[i] = g;
+      px[i + 1] = g;
+      px[i + 2] = g;
+    }
+    ctx.putImageData(data, 0, 0);
+    return canvas.toDataURL('image/jpeg', 0.8);
+  }
+
+  // Reads the chosen files one after the other, then stores them.
+  function addPhotos(files, onDone) {
+    var list = userPhotos();
+    var i = 0;
+    var next = function () {
+      if (i >= files.length || list.length >= PHOTO_MAX) {
+        storeUserPhotos(list);
+        onDone();
+        return;
+      }
+      var file = files[i++];
+      if (!file || file.type.indexOf('image/') !== 0) {
+        next();
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () {
+        var img = new Image();
+        img.onload = function () {
+          try {
+            list.push(toGrayJpeg(img));
+          } catch (e) {
+            // This picture could not be converted: skip it.
+          }
+          next();
+        };
+        img.onerror = next;
+        img.src = reader.result;
+      };
+      reader.onerror = next;
+      reader.readAsDataURL(file);
+    };
+    next();
+  }
+
+  // Shows photo number i of the list (wraps around), with a crossfade.
   function showPhoto(i) {
     var a = $('photo-a');
     var b = $('photo-b');
-    if (!a || !b || typeof PHOTOS === 'undefined' || !PHOTOS.length) {
+    var list = photoSources();
+    if (!a || !b || !list.length) {
       return;
     }
     var next = photoCur === a ? b : a;
-    next.style.backgroundImage = 'url("' + PHOTOS[i] + '")';
+    next.style.backgroundImage = 'url("' + list[i % list.length] + '")';
     next.style.opacity = '1';
     if (photoCur) {
       photoCur.style.opacity = '0';
@@ -806,12 +918,13 @@
   }
 
   function startPhotos() {
-    if (typeof PHOTOS === 'undefined' || !PHOTOS.length) {
-      return;
-    }
     showPhoto(0);
     window.setInterval(function () {
-      photoIdx = (photoIdx + 1) % PHOTOS.length;
+      var n = photoSources().length;
+      if (!n) {
+        return;
+      }
+      photoIdx = (photoIdx + 1) % n;
       showPhoto(photoIdx);
     }, 20000);
   }
