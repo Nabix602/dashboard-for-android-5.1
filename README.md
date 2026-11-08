@@ -104,7 +104,7 @@ L'APK se trouve dans `platforms/android/app/build/outputs/apk/debug/`. Vérifiez
 | Quoi | Où | Comment |
 |---|---|---|
 | Clé et pseudo Last.fm | `script.js`, bloc `CONFIG` | `./setup.sh` ou à la main |
-| Coordonnées de la météo | `weather.js`, `LAT` et `LON` | remplacez par votre ville |
+| Ville de la météo | `setup.js` (ou assistant) | `./setup.sh`, ou l'assistant à l'écran |
 | Citations | `quotes.js`, tableau `QUOTES` | ajoutez vos citations (format dans le fichier) |
 | Citations personnelles | `quotes.js`, tableau `USER_QUOTES` | remplace les citations par défaut quand il n'est pas vide |
 | Sources d'actualités | `news.js`, tableau `FEEDS` | ajoutez des flux RSS |
@@ -112,6 +112,10 @@ L'APK se trouve dans `platforms/android/app/build/outputs/apk/debug/`. Vérifiez
 | Heures de mise à jour | `script.js`, `UPDATE_HOUR_FROM` / `UPDATE_HOUR_TO` | 3 h à 5 h par défaut |
 
 Les réglages du bouton ⚙ sont gardés dans le navigateur de l'appareil.
+
+Dans ⚙, les lignes « Météo » et « Actualités » choisissent leur colonne : gauche, droite ou masquée.
+
+Si le projet n'a pas été configuré avec `./setup.sh`, un assistant s'affiche une fois au premier lancement dans le navigateur pour demander la ville, puis la clé et le pseudo Last.fm (facultatifs).
 
 ## Diaporama de photos (noir et blanc)
 
