@@ -982,6 +982,24 @@
     });
   }
 
+  /* ---------- Startup splash: stays while the dashboard loads, at least 1.8 s ---------- */
+
+  var splashStart = Date.now();
+
+  function hideSplash() {
+    var el = $('splash');
+    if (!el) {
+      return;
+    }
+    var wait = Math.max(0, 1800 - (Date.now() - splashStart));
+    window.setTimeout(function () {
+      el.className = 'done';
+      window.setTimeout(function () {
+        el.style.display = 'none';
+      }, 950);
+    }, wait);
+  }
+
   window.onload = function () {
     init();
     setupFullscreen();
@@ -991,5 +1009,6 @@
     checkForUpdate();
     window.setInterval(checkForUpdate, UPDATE_CHECK_MS);
     startPhotos();
+    hideSplash();
   };
 })();
