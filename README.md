@@ -1,244 +1,136 @@
 # Dashboard Esteban
 
-Tableau de bord « smart display » pour une vieille tablette Android en mode paysage. Il affiche l'heure, la date, la météo, des actualités, des citations, en option, le morceau en cours d'écoute sur Spotify.
+Un tableau de bord **façon Apple StandBy / iPadOS** pour une vieille tablette Android en paysage, ou pour n'importe quel écran. Il tourne dans un navigateur : pas d'application à installer, pas de compte à créer.
 
-Le projet est une page statique : HTML, CSS et JavaScript ES5, sans React, sans npm, sans étape de compilation et sans serveur.
+Horloge, date, météo, lever et coucher du soleil, citations, actualités, morceau en cours sur Spotify (via Last.fm), mode nuit automatique, mode veille et réglages, le tout sobre et noir.
 
-## Ce que fait le tableau de bord
+![Accueil avec la citation du moment](screenshots/accueil.png)
 
-- **Horloge** très grande, en format 24 h, avec la date en français sous l'heure.
-- **Météo** de Gazeran (Yvelines), mise à jour toutes les 15 minutes, avec une teinte d'ambiance selon le temps (chaude pour le soleil, bleue pour la pluie, grise pour les nuages).
-- **Actualités** : un titre à la fois, avec la source et l'heure de publication, qui change toutes les 10 minutes. La carte est masquée hors ligne.
-- **Citations** en français : une citation par heure, et une « Citation du jour » mise en avant chaque matin entre 07:00 et 09:00.
-- **Spotify** (optionnel) : pendant la lecture, l'heure se réduit et la pochette du morceau devient l'élément principal, avec le titre, l'artiste et le temps écoulé. Sans configuration, ou si rien ne joue, la carte est remplacée par les citations. La pochette vient de Last.fm ; si Last.fm n'en a pas, elle est cherchée sur l'API publique iTunes Search (sans clé). Sinon, la pochette est agrandie et centrée ; si elle ne charge pas, un visuel sobre remplace le carré noir. Lors d'un changement de morceau, la nouvelle pochette apparaît en fondu par-dessus l'ancienne.
-- **Mode nuit** de 21:30 à 07:00 : fond noir, seules l'heure, la date et la météo restent visibles.
-- **Mode veille** : après 30 minutes sans morceau ni match, le tableau de bord ne garde que l'heure, la météo et une citation. Il revient seul quand Spotify ou un match démarre.
-- **Plein écran** : géré par le navigateur, sans bouton à l'écran.
-- **Indicateur de connexion** très discret (en ligne ou hors ligne), affiché quelques secondes après un changement.
-- **Écran de démarrage** « Dashboard Esteban » pendant quelques secondes.
+| Lecture Spotify | Réglages | Mode nuit |
+|---|---|---|
+| ![Lecture](screenshots/lecture.png) | ![Réglages](screenshots/reglages.png) | ![Nuit](screenshots/nuit.png) |
 
-## Configuration requise
+> Les captures utilisent des données de démonstration (morceau fictif, météo et actualité d'exemple).
 
-- Une tablette ou un navigateur capable d'afficher une page web. Le projet vise Android 5.1 (Remix OS) et fonctionne aussi sur un ordinateur ou un téléphone récent.
-- Une connexion Internet pour la météo, les actualités, et Spotify. Sans connexion, l'horloge et les citations fonctionnent toujours.
-- Aucun compte n'est obligatoire. Last.fm et les services de données sont optionnels.
+## Fonctionnalités
 
-## Compatibilité Android 5.1
+- **Horloge** centrée, grande et lisible, avec la date en dessous.
+- **Météo** de votre ville (Open-Meteo, sans clé), avec le lever et le coucher du soleil calculés localement.
+- **Citations** : une citation change chaque heure, une citation du jour apparaît le matin, et des citations d'artistes peuvent être ajoutées.
+- **Actualités** : titres de sources françaises, changés toutes les 15 minutes en fondu.
+- **Spotify** : pochette, titre, artiste et barre de progression du morceau en cours, via Last.fm. Si rien ne joue, les citations reprennent.
+- **Mode nuit** automatique de 21 h 30 à 7 h, désactivable.
+- **Mode veille** après 30 minutes sans activité, qui ne laisse que l'horloge.
+- **Réglages** (bouton ⚙) : luminosité, affichage des citations, mode nuit auto.
+- **Plein écran** (bouton ⛶) et indicateur de connexion discret.
+- **Mise à jour automatique** : la page vérifie chaque demi-heure s'il existe une nouvelle version, et ne se recharge qu'entre 3 h et 5 h, et jamais pendant qu'un morceau joue.
 
-- HTML, CSS et JavaScript ES5 uniquement. Pas de modules, pas de `async` / `await`, pas de `let` / `const`, pas de fonctions fléchées.
-- Mise en page en Flexbox (préfixes `-webkit-` inclus). Pas de CSS Grid, pas de variables CSS, pas de `backdrop-filter`.
-- Requêtes réseau par `XMLHttpRequest`, sans `fetch`.
-- Animations légères (opacité uniquement), sans effets coûteux.
+## Prérequis
 
-Ces points sont appliqués dans le code, mais le projet doit être testé sur l'appareil réel. Les versions du navigateur Remix OS peuvent varier.
+- Un navigateur récent (Chrome, Firefox, Edge, Samsung Internet).
+- Pour la configuration depuis le terminal : `git` et `python3`.
+- Facultatif : un compte [Last.fm](https://www.last.fm) et une clé API, pour afficher Spotify.
 
-## Installation rapide
+> Ce dépôt est ta version personnelle, avec tes clés Last.fm dans `script.js`. La version publique à partager est [dashboard-for-android-5.5](https://github.com/Nabix602/dashboard-for-android-5.5). Ne publie jamais ce dépôt tant que tes clés y sont.
 
-Aucune installation n'est nécessaire. Il suffit d'ouvrir `index.html` dans un navigateur, ou de l'héberger (voir plus bas).
-
-## Lancer en local
-
-1. Téléchargez ou clonez le dossier du projet.
-2. Ouvrez `index.html` dans Chrome, Firefox ou Edge.
-
-Pour tester depuis un autre appareil sur le même réseau, lancez un serveur statique dans le dossier, par exemple avec Python :
-
-```
-python -m http.server 8000
-```
-
-Puis ouvrez `http://IP_DE_VOTRE_PC:8000` sur la tablette.
-
-## Déployer sur GitHub Pages
-
-1. Créez un dépôt public nommé, par exemple, `dashboard-esteban`.
-2. Ajoutez les fichiers du projet à la racine du dépôt : `index.html`, `style.css`, `script.js`, `quotes.js`, `weather.js`, `news.js`.
-3. Dans **Settings > Pages**, choisissez **Deploy from a branch**, la branche `main` et le dossier `/ (root)`.
-4. Attendez quelques minutes. L'adresse sera de la forme `https://VOTRE-NOM.github.io/dashboard-esteban/`.
-5. Ouvrez cette adresse sur la tablette, puis passez en plein écran via le navigateur si besoin.
-
-Important : tout le code, y compris votre clé Last.fm si vous la renseignez, est public sur GitHub Pages. Ne mettez jamais de mot de passe ou de clé privée dans ce projet. Une clé Last.fm en lecture seule est acceptable mais reste visible par tous.
-
-## Structure du projet
-
-```
-dashboard-esteban/
-├── README.md
-├── index.html
-├── style.css
-├── script.js
-├── quotes.js
-├── weather.js
-└── news.js
-```
-
-Rôle des fichiers :
-
-- `index.html` : structure de la page et chargement des scripts dans cet ordre : `quotes.js`, `weather.js`, `news.js`, `script.js`.
-- `style.css` : apparence, animations, mode nuit, mode veille.
-- `script.js` : horloge, mode nuit, citations, Spotify via Last.fm, mode veille, indicateur de connexion, et démarrage. Il coordonne les autres modules.
-- `quotes.js` : liste des citations et liste personnelle `USER_QUOTES`.
-- `weather.js` : météo Open-Meteo et teinte d'ambiance.
-- `news.js` : actualités via des flux RSS convertis en JSON.
-
-## Spotify et Last.fm
-
-Spotify ne fournit plus l'écoute en cours aux comptes gratuits via son API web, et l'API exige un abonnement Premium pour les applications en mode développement. Le tableau de bord passe donc par Last.fm, qui reçoit l'historique d'écoute de Spotify.
-
-Principe : Spotify envoie l'écoute à Last.fm, et le tableau de bord lit le « morceau en cours » sur Last.fm.
-
-### Étapes
-
-1. Créez un compte gratuit sur [last.fm](https://www.last.fm).
-2. Connectez Spotify : dans Last.fm, allez dans **Réglages > Applications** et cliquez sur **Connect** à côté de **Spotify Scrobbling**. Ce n'est pas une fonction Premium.
-3. Créez une clé API gratuite sur [last.fm/api/account/create](https://www.last.fm/api/account/create). Notez la clé (API key).
-4. Ouvrez `script.js` et renseignez le bloc `CONFIG` :
-
-```javascript
-var CONFIG = {
-  lastfmApiKey: 'VOTRE_CLE_API',
-  lastfmUser: 'VOTRE_PSEUDO_LASTFM'
-};
-```
-
-5. Rechargez le tableau de bord. Quand vous écoutez un morceau sur Spotify, la carte apparaît avec la pochette, le titre et l'artiste.
-
-Tant que `lastfmApiKey` ou `lastfmUser` reste vide, le tableau de bord affiche simplement les citations. Aucun message d'erreur n'est affiché.
-
-### Limites
-
-- Le délai entre le début d'un morceau et son apparition peut être de quelques dizaines de secondes.
-- Last.fm ne fournit pas la position de lecture : le temps affiché est estimé à partir du moment où le morceau est détecté. Il peut être décalé de quelques secondes, et il continue de défiler pendant une pause. La barre et la durée n'apparaissent que si Last.fm connaît la durée du morceau.
-- La requête est faite depuis le navigateur. Si Last.fm n'accepte pas ce type d'appel depuis votre domaine, la carte Spotify ne s'affichera jamais, sans erreur visible. Dans ce cas, les citations restent affichées.
-- L'usage de l'API Last.fm est réservé à un usage non commercial, conformément à ses conditions.
-
-## Système météo
-
-- Source : [Open-Meteo](https://open-meteo.com), gratuit et sans clé.
-- Position : coordonnées fixes de Gazeran, réglées dans `weather.js` (`LAT` et `LON`). Il n'y a pas de géolocalisation. Les coordonnées sont approximatives et peuvent être ajustées.
-- Actualisation : toutes les 15 minutes.
-- Affichage : icône, température et condition. La condition est traduite en français à partir du code météo.
-- Teinte d'ambiance : chaude pour le soleil, grise pour les nuages, bleue pour la pluie, violette pour l'orage, claire pour la neige, grise et douce pour le brouillard. Elle est appliquée par CSS, sans calcul lourd.
-
-Si la météo ne répond pas, la carte reste masquée.
-
-
-## Système d'actualités
-
-- Sources : flux RSS publics (BFMTV, France Info, Le Monde, Le Figaro, L'Équipe, Numerama), convertis en JSON par le service gratuit [rss2json](https://rss2json.com). Les flux technologie et sciences sont prioritaires ; un flux en échec est simplement ignoré.
-- Sujets : technologie, sciences, France et actualité générale. Un filtre simple écarte les titres politiques ou de type « clickbait ».
-- Affichage : un titre court, la source et l'heure de publication.
-- Rotation : toutes les 15 minutes, avec un fondu doux. Le texte ne change jamais brusquement.
-- Si moins de 3 titres sont disponibles, la rotation s'arrête et le titre le plus récent reste affiché.
-- Si la source ne répond pas, la carte est masquée sans message d'erreur.
-- Actualisation des flux : toutes les heures. Après une actualisation, le titre affiché reste le même et la rotation continue dans le même ordre.
-- Hors ligne : la carte est masquée.
-
-Les adresses des flux doivent être vérifiées (celles-ci ne l'ont pas encore été) et peuvent être modifiées dans le tableau `FEEDS` de `news.js`.
-
-## Plein écran
-
-Le tableau de bord n'affiche aucun bouton de plein écran. Utilisez les commandes du navigateur :
-
-- Ordinateur : touche F11 pour entrer ou sortir du plein écran.
-- Échap pour quitter le plein écran.
-- Tablette : menu du navigateur, si celui-ci propose le plein écran.
-
-Le tableau de bord ne verrouille jamais Android et ne bloque pas la sortie.
-
-## Mode nuit
-
-- Actif de 21:30 à 07:00, heure du navigateur.
-- Fond noir, seules l'heure, la date et la météo restent visibles.
-- Les cartes citation, Spotify et actualités sont masquées.
-
-## Réglages (bouton ⚙)
-
-Le bouton ⚙ apparaît quand on touche l'écran ou qu'on bouge la souris, à côté du bouton plein écran. Il ouvre un panneau avec :
-
-- **Luminosité** : de 40 % à 100 %, par pas de 10 %.
-- **Citations** : affichées ou masquées.
-- **Mode nuit auto (21 h 30 – 7 h)** : activé ou désactivé. Désactivé, le mode nuit ne s'applique plus, même la nuit.
-
-Les réglages sont gardés dans le navigateur de la tablette.
-
-## Personnaliser les citations
-
-Ouvrez `quotes.js`. Chaque citation a la forme suivante :
-
-```javascript
-{
-  text: 'Votre citation.',
-  author: 'Auteur réel',
-  category: 'Philosophie'
-}
-```
-
-Catégories autorisées : `Proverbe français`, `Philosophie`, `Littérature`, `Phrase originale`, `Artist name`.
-
-### Citations d'artistes
-
-Pour une citation d'artiste, utilisez `category: 'Artist name'`, mettez le nom de l'artiste dans `author` et le titre du morceau dans `song`. La citation s'affiche avec un badge musical et un style distinct :
-
-```javascript
-{
-  text: 'Votre citation.',
-  author: 'NOM DE L\'ARTISTE',
-  song: 'Titre du morceau',
-  category: 'Artist name'
-}
-```
-
-Le projet ne fournit aucune citation d'artiste : ajoutez uniquement des textes exacts que vous avez le droit d'utiliser. Une courte citation ou une paraphrase reste préférable à la reproduction de paroles.
-
-Vous pouvez modifier la liste `QUOTES`, ou remplir `USER_QUOTES` : si cette liste contient au moins une citation, elle remplace la liste par défaut.
-
-```javascript
-var USER_QUOTES = [
-  { text: 'Votre citation.', author: 'Auteur réel', category: 'Philosophie' }
-];
-```
-
-Utilisez uniquement des citations véritables et attribuées correctement.
-
-Une citation change chaque heure. La « Citation du jour » est choisie automatiquement chaque jour, entre 07:00 et 09:00, et signalée par un badge.
-
-## Dépannage
-
-- **Écran noir au démarrage** : l'écran de démarrage dure environ 4 secondes. Patientez ou rechargez la page.
-- **Pas de carte Spotify** : vérifiez `CONFIG` dans `script.js` et que Spotify est connecté dans les réglages de Last.fm.
-- **Pas de météo** : vérifiez la connexion Internet et les coordonnées.
-- **Pas d'actualités** : vérifiez les adresses de `FEEDS` dans `news.js`.
-- **Animations lentes** : supprimez l'élément `#ambient-glow` dans `index.html` et son bloc CSS.
-
-## Télécharger le projet
-
-Depuis un terminal, sans compte GitHub :
+## Installation depuis le terminal
 
 ```bash
-# Avec Git
-git clone https://github.com/Nabix602/dashboard-for-android-5.1.git
+# 1. Télécharger le projet
+git clone https://github.com/<votre-pseudo>/dashboard-for-android-5.5.git
+cd dashboard-for-android-5.5
 
-# Sans Git : archive ZIP de la branche main
-curl -L -o dashboard.zip https://github.com/Nabix602/dashboard-for-android-5.1/archive/refs/heads/main.zip
-unzip dashboard.zip
+# 2. Configurer (clé et pseudo Last.fm, facultatifs)
+./setup.sh
+
+# 3. Tester dans le navigateur
+python3 -m http.server 8000
+# puis ouvrir http://localhost:8000
 ```
 
-## Générer une APK
+Sans Git : téléchargez l'archive ZIP de la branche principale.
 
-Le dashboard est une page web statique : il suffit de l'envelopper dans une application Android. Une solution simple est Apache Cordova. Les étapes ci-dessous n'ont pas été testées sur ce projet ; elles demandent Node.js, Java JDK et le SDK Android.
+```bash
+curl -L -o dashboard.zip https://github.com/<votre-pseudo>/dashboard-for-android-5.5/archive/refs/heads/main.zip
+unzip dashboard.zip
+cd dashboard-for-android-5.5-main
+./setup.sh
+```
+
+## Obtenir une clé Last.fm (pour Spotify)
+
+1. Créez un compte sur [last.fm](https://www.last.fm) et connectez Spotify à Last.fm (*Settings → Applications*).
+2. Créez une clé API sur [last.fm/api/account/create](https://www.last.fm/api/account/create).
+3. Lancez `./setup.sh` et collez la clé et votre pseudo.
+
+Sans clé, le dashboard fonctionne quand même : il affiche simplement les citations.
+
+## Mettre en ligne (GitHub Pages)
+
+1. Poussez le projet sur votre compte GitHub, dans un dépôt **public**.
+2. Dans le dépôt : *Settings → Pages → Build and deployment → Deploy from a branch → `main` / `(root)`*.
+3. Après une minute, le dashboard est disponible sur `https://<votre-pseudo>.github.io/dashboard-for-android-5.5/`.
+
+Les clés Last.fm et le pseudo sont écrits dans `script.js`. Si vous publiez votre propre copie, ne la rendez publique qu'après avoir retiré vos clés, ou utilisez un dépôt privé avec un compte GitHub payant (GitHub Pages n'est pas disponible sur un dépôt privé gratuit).
+
+## Installer sur la tablette
+
+1. Ouvrez l'adresse du dashboard dans le navigateur de la tablette.
+2. Passez en plein écran avec le bouton ⛶ (ou F11 sur un ordinateur).
+3. Désactivez la mise en veille de l'écran dans les réglages de la tablette.
+
+Le projet est conçu pour fonctionner sur Android 5.1 (navigateur d'origine). Sur un appareil plus ancien, certains effets visuels peuvent être plus simples.
+
+## Générer une APK (facultatif, non testé)
+
+Le dashboard est une page web statique : vous pouvez l'envelopper dans une application Android avec Apache Cordova. Les étapes suivantes demandent Node.js, Java JDK et le SDK Android, et n'ont pas été testées sur ce projet.
 
 ```bash
 npm install -g cordova
-cordova create dashboard-apk com.esteban.dashboard "Dashboard Esteban"
+cordova create dashboard-apk com.example.dashboard "Dashboard"
 cd dashboard-apk
-rm -rf www && cp -r /chemin/vers/dashboard-for-android-5.1 www
+rm -rf www && cp -r /chemin/vers/dashboard-for-android-5.5 www
 cordova platform add android
 cordova build android
 ```
 
-L'APK se trouve ensuite dans `platforms/android/app/build/outputs/apk/debug/`. Pour la tablette, activez l'installation depuis des sources inconnues. Vérifiez la compatibilité avec votre version d'Android avant d'installer.
+L'APK se trouve dans `platforms/android/app/build/outputs/apk/debug/`. Vérifiez la compatibilité de votre version d'Android avant de l'installer.
+
+## Personnaliser
+
+| Quoi | Où | Comment |
+|---|---|---|
+| Clé et pseudo Last.fm | `script.js`, bloc `CONFIG` | `./setup.sh` ou à la main |
+| Coordonnées de la météo | `weather.js`, `LAT` et `LON` | remplacez par votre ville |
+| Citations | `quotes.js`, tableau `QUOTES` | ajoutez vos citations (format dans le fichier) |
+| Citations personnelles | `quotes.js`, tableau `USER_QUOTES` | remplace les citations par défaut quand il n'est pas vide |
+| Sources d'actualités | `news.js`, tableau `FEEDS` | ajoutez des flux RSS |
+| Heures du mode nuit | `script.js`, fonction `updateNight` | 21 h 30 à 7 h par défaut |
+| Heures de mise à jour | `script.js`, `UPDATE_HOUR_FROM` / `UPDATE_HOUR_TO` | 3 h à 5 h par défaut |
+
+Les réglages du bouton ⚙ sont gardés dans le navigateur de l'appareil.
+
+## Structure du projet
+
+```
+index.html    structure de la page
+style.css     apparence (mise en page, couleurs, animations)
+script.js     logique : horloge, Spotify, mode nuit, réglages, mise à jour
+quotes.js     citations
+weather.js    météo (Open-Meteo)
+news.js       actualités (flux RSS via rss2json)
+setup.sh      configuration guidée depuis le terminal
+screenshots/  captures d'écran du README
+```
+
+## Dépannage
+
+- **Spotify n'affiche rien** : vérifiez la clé et le pseudo, et que Spotify est bien connecté à Last.fm. Le dashboard affiche les citations s'il ne reçoit rien.
+- **Pas de météo** : vérifiez la connexion de l'appareil et les coordonnées dans `weather.js`.
+- **Une source d'actualités ne s'affiche pas** : son adresse est probablement incorrecte ou ne renvoie pas de flux. Elle est ignorée sans message d'erreur.
+- **Écran noir au démarrage** : l'écran de démarrage dure environ 4 secondes.
+- **Je ne vois pas la dernière version** : le navigateur garde une copie en cache. Videz les données du site, ou ouvrez l'adresse avec `?v=1` à la fin.
 
 ## Licence
 
-Usage personnel. Les données proviennent de services tiers (Open-Meteo, Last.fm, rss2json et les éditeurs des flux RSS) soumis à leurs propres conditions.
+Ce projet est distribué sous licence [MIT](LICENSE). Vous pouvez l'utiliser, le modifier et le redistribuer librement, en gardant la mention de copyright.
