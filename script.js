@@ -240,7 +240,9 @@
 
   function applyMediaState() {
     fadeEl($('spotify'), mediaActive);
-    fadeEl($('quote'), !mediaActive && quotesOn && quoteList().length > 0);
+    var photosOn = typeof PHOTOS !== 'undefined' && PHOTOS.length > 0;
+    fadeEl($('photo'), !mediaActive && photosOn);
+    fadeEl($('quote'), !mediaActive && !photosOn && quotesOn && quoteList().length > 0);
     playingOn = mediaActive;
     applyBodyClass();
   }
@@ -782,6 +784,38 @@
       '<span class="sun-item">' + down + '<span>' + hhmm(set) + '</span></span>';
   }
 
+  /* ---------- Photo slideshow ---------- */
+
+  var photoCur = null;
+  var photoIdx = 0;
+
+  // Crossfade: the incoming photo fades in while the current one fades out.
+  function showPhoto(i) {
+    var a = $('photo-a');
+    var b = $('photo-b');
+    if (!a || !b || typeof PHOTOS === 'undefined' || !PHOTOS.length) {
+      return;
+    }
+    var next = photoCur === a ? b : a;
+    next.style.backgroundImage = 'url("' + PHOTOS[i] + '")';
+    next.style.opacity = '1';
+    if (photoCur) {
+      photoCur.style.opacity = '0';
+    }
+    photoCur = next;
+  }
+
+  function startPhotos() {
+    if (typeof PHOTOS === 'undefined' || !PHOTOS.length) {
+      return;
+    }
+    showPhoto(0);
+    window.setInterval(function () {
+      photoIdx = (photoIdx + 1) % PHOTOS.length;
+      showPhoto(photoIdx);
+    }, 20000);
+  }
+
   /* ---------- Automatic update ----------
      Every 30 minutes the page asks the server for the ETag of index.html.
      When it changes, the page reloads only between 3 h and 5 h, and never
@@ -843,5 +877,6 @@
     setupSettings();
     checkForUpdate();
     window.setInterval(checkForUpdate, UPDATE_CHECK_MS);
+    startPhotos();
   };
 })();

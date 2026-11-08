@@ -821,3 +821,31 @@ body.night #net {
   box-shadow: none;
 }
 
+/* Black and white photo slideshow, in the centre column when no music plays */
+#photo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 40px;
+  overflow: hidden;
+  background: #000;
+}
+
+.photo-layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(100%);
+  -webkit-transition: opacity 2s ease;
+  transition: opacity 2s ease;
+}
+
