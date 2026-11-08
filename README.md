@@ -1,4 +1,6 @@
-# Dashboard Esteban
+# Dashboard for Android 5.5
+
+*made by Esteban W*
 
 Un tableau de bord **façon Apple StandBy / iPadOS** pour une vieille tablette Android en paysage, ou pour n'importe quel écran. Il tourne dans un navigateur : pas d'application à installer, pas de compte à créer.
 
