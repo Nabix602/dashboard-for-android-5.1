@@ -986,12 +986,40 @@
 
   var splashStart = Date.now();
 
+  var splashPct = 0;
+  var splashTimer = null;
+
+  function setSplashPct(p) {
+    var bar = $('prog-bar');
+    var txt = $('prog-pct');
+    if (bar) {
+      bar.style.width = p + '%';
+    }
+    if (txt) {
+      txt.textContent = Math.round(p) + ' %';
+    }
+  }
+
+  // Creeps up towards 90 % while the dashboard loads, then jumps to 100 % when ready.
+  function startSplashProgress() {
+    splashTimer = window.setInterval(function () {
+      splashPct = Math.min(90, splashPct + (90 - splashPct) * 0.08 + 0.3);
+      setSplashPct(splashPct);
+    }, 120);
+  }
+
   function hideSplash() {
     var el = $('splash');
     if (!el) {
       return;
     }
-    var wait = Math.max(0, 1800 - (Date.now() - splashStart));
+    if (splashTimer) {
+      window.clearInterval(splashTimer);
+      splashTimer = null;
+    }
+    splashPct = 100;
+    setSplashPct(100);
+    var wait = Math.max(500, 1800 - (Date.now() - splashStart));
     window.setTimeout(function () {
       el.className = 'done';
       window.setTimeout(function () {
@@ -999,6 +1027,8 @@
       }, 950);
     }, wait);
   }
+
+  startSplashProgress();
 
   window.onload = function () {
     init();
