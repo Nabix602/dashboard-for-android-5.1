@@ -782,11 +782,66 @@
       '<span class="sun-item">' + down + '<span>' + hhmm(set) + '</span></span>';
   }
 
+  /* ---------- Automatic update ----------
+     Every 30 minutes the page asks the server for the ETag of index.html.
+     When it changes, the page reloads only between 3 h and 5 h, and never
+     while music is playing, so the clock and the display never jump by day. */
+
+  var UPDATE_CHECK_MS = 30 * 60 * 1000;
+  var UPDATE_HOUR_FROM = 3;
+  var UPDATE_HOUR_TO = 5;
+  var versionTag = null;
+
+  function readVersionTag(cb) {
+    var xhr;
+    try {
+      xhr = new XMLHttpRequest();
+    } catch (e) {
+      cb(null);
+      return;
+    }
+    xhr.open('HEAD', 'index.html?check=' + Date.now(), true);
+    xhr.timeout = 10000;
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      if (xhr.status !== 200) {
+        cb(null);
+        return;
+      }
+      cb(xhr.getResponseHeader('ETag') || xhr.getResponseHeader('Last-Modified') || null);
+    };
+    try {
+      xhr.send(null);
+    } catch (e) {
+      cb(null);
+    }
+  }
+
+  function checkForUpdate() {
+    var hour = new Date().getHours();
+    readVersionTag(function (tag) {
+      if (!tag) {
+        return;
+      }
+      if (versionTag === null) {
+        versionTag = tag;
+        return;
+      }
+      if (tag !== versionTag && hour >= UPDATE_HOUR_FROM && hour < UPDATE_HOUR_TO && !mediaActive) {
+        window.location.replace('index.html?v=' + Date.now());
+      }
+    });
+  }
+
   window.onload = function () {
     init();
     setupFullscreen();
     updateSun();
     window.setInterval(updateSun, 60000);
     setupSettings();
+    checkForUpdate();
+    window.setInterval(checkForUpdate, UPDATE_CHECK_MS);
   };
 })();
