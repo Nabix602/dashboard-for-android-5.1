@@ -21,6 +21,7 @@ Horloge, date, météo, lever et coucher du soleil, citations, actualités, morc
 - **Citations** : une citation change chaque heure, une citation du jour apparaît le matin, et des citations d'artistes peuvent être ajoutées.
 - **Actualités** : titres de sources françaises, changés toutes les 15 minutes en fondu.
 - **Spotify** : pochette, titre, artiste et barre de progression du morceau en cours, via Last.fm. Si rien ne joue, les citations reprennent.
+- **Diaporama de photos** en noir et blanc quand aucun morceau ne joue (`photos.js`).
 - **Mode nuit** automatique de 21 h 30 à 7 h, désactivable.
 - **Mode veille** après 30 minutes sans activité, qui ne laisse que l'horloge.
 - **Réglages** (bouton ⚙) : luminosité, affichage des citations, mode nuit auto.
@@ -111,6 +112,23 @@ L'APK se trouve dans `platforms/android/app/build/outputs/apk/debug/`. Vérifiez
 | Heures de mise à jour | `script.js`, `UPDATE_HOUR_FROM` / `UPDATE_HOUR_TO` | 3 h à 5 h par défaut |
 
 Les réglages du bouton ⚙ sont gardés dans le navigateur de l'appareil.
+
+## Diaporama de photos (noir et blanc)
+
+Quand aucun morceau ne joue, la colonne centrale affiche tes photos en fondu, toutes les 20 secondes, en noir et blanc.
+
+1. Crée un dossier `photos/` à la racine du projet et copies-y tes photos.
+2. Convertis-les en noir et blanc, pour que le rendu marche aussi sur les vieux navigateurs :
+   ```bash
+   convert photo.jpg -colorspace Gray -resize 1600x1600 photos/photo.jpg
+   ```
+   (ImageMagick requis. Sans ImageMagick, vous pouvez utiliser un éditeur d'images.)
+3. Liste-les dans `photos.js` :
+   ```js
+   var PHOTOS = ['photos/photo1.jpg', 'photos/photo2.jpg'];
+   ```
+
+Tant que la liste est vide, ce sont les citations qui s'affichent.
 
 ## Structure du projet
 
