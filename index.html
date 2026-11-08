@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Dashboard Esteban</title>
-<link rel="stylesheet" href="style.css?v=24">
+<link rel="stylesheet" href="style.css?v=25">
 </head>
 <body>
 <div id="splash"><div class="splash-inner"><p>dashboard-for-android-5</p><div class="progress"><div id="prog-bar"></div></div><p id="prog-pct">0 %</p></div><span class="splash-credit">Made by Esteban W</span></div>
@@ -57,9 +57,25 @@
       </div>
     </div>
 
+    <div id="side-right"></div>
+
   </div>
 
   <div id="net" style="display:none"></div>
+
+  <div id="wizard" style="display:none">
+    <div class="wiz-box">
+      <p id="wiz-title" class="wiz-title"></p>
+      <p id="wiz-text" class="wiz-text"></p>
+      <input id="wiz-input" type="text" autocomplete="off">
+      <input id="wiz-input2" type="text" autocomplete="off" style="display:none">
+      <p id="wiz-err" class="wiz-err"></p>
+      <div class="wiz-actions">
+        <button id="wiz-skip" type="button">Passer</button>
+        <button id="wiz-next" type="button">Suivant</button>
+      </div>
+    </div>
+  </div>
 
   <button id="fs" type="button" aria-label="Plein écran" style="display:none">⛶</button>
   <button id="cfg" type="button" aria-label="Réglages" style="display:none">⚙</button>
@@ -79,6 +95,14 @@
     </div>
     <input id="p-file" type="file" accept="image/*" multiple style="display:none">
     <div class="panel-row">
+      <span>Météo</span>
+      <span class="panel-ctl"><button id="lay-weather" type="button">Gauche</button></span>
+    </div>
+    <div class="panel-row">
+      <span>Actualités</span>
+      <span class="panel-ctl"><button id="lay-news" type="button">Gauche</button></span>
+    </div>
+    <div class="panel-row">
       <span>Citations</span>
       <span class="panel-ctl"><button id="q-toggle" type="button">Affichées</button></span>
     </div>
@@ -86,10 +110,12 @@
   </div>
 </div>
 
+<script src="setup.js?v=1"></script>
+<script src="boot.js?v=1"></script>
 <script src="quotes.js?v=14"></script>
 <script src="weather.js?v=3"></script>
 <script src="photos.js?v=1"></script>
 <script src="news.js?v=3"></script>
-<script src="script.js?v=24"></script>
+<script src="script.js?v=25"></script>
 </body>
 </html>

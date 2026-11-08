@@ -21,6 +21,25 @@ need_python() {
   fi
 }
 
+mark_setup() {
+  # Writes setup.js: the browser assistant is skipped from now on.
+  # With two arguments (latitude longitude), stores the city; otherwise keeps the stored city.
+  python3 - "$@" <<'PY'
+import os, re, sys
+p = 'setup.js'
+keep = []
+if os.path.exists(p):
+    keep = [l.rstrip('\n') for l in open(p, encoding='utf-8') if re.match(r'\s*window\.DASH_L(AT|ON)\b', l)]
+out = ['// Written by ./setup.sh when the dashboard is configured from the terminal.',
+       'window.SETUP_DONE = true;']
+if len(sys.argv) == 3:
+    out += ['window.DASH_LAT = %s;' % sys.argv[1], 'window.DASH_LON = %s;' % sys.argv[2]]
+else:
+    out += keep
+open(p, 'w', encoding='utf-8').write('\n'.join(out) + '\n')
+PY
+}
+
 set_lastfm() {
   echo "Spotify via Last.fm (laisse vide pour ne pas l'utiliser)"
   read -r -p "  Clé API Last.fm : " key
@@ -39,6 +58,7 @@ PY
   then
     echo "  ✗ Spotify non enregistré"
   else
+    mark_setup
     echo "  ✓ Spotify enregistré"
   fi
 }
@@ -46,29 +66,29 @@ PY
 set_city() {
   read -r -p "  Ville pour la météo (ex. Gazeran) : " city
   [ -z "$city" ] && return
-  if ! python3 - "$city" <<'PY'
-import json, re, sys, urllib.parse, urllib.request
+  local coords
+  if ! coords=$(python3 - "$city" <<'PY'
+import json, sys, urllib.parse, urllib.request
 city = sys.argv[1]
 url = 'https://geocoding-api.open-meteo.com/v1/search?' + urllib.parse.urlencode(
     {'name': city, 'count': 1, 'language': 'fr', 'format': 'json'})
-with urllib.request.urlopen(url, timeout=15) as r:
-    data = json.load(r)
+try:
+    with urllib.request.urlopen(url, timeout=15) as r:
+        data = json.load(r)
+except Exception:
+    sys.exit('Recherche impossible (connexion ?)')
 res = (data.get('results') or [None])[0]
 if not res:
     sys.exit('Ville introuvable : ' + city)
-lat, lon = res['latitude'], res['longitude']
-p = 'weather.js'
-s = open(p, encoding='utf-8').read()
-s, a = re.subn(r"var LAT = [-0-9.]+;", "var LAT = %s;" % lat, s)
-s, b = re.subn(r"var LON = [-0-9.]+;", "var LON = %s;" % lon, s)
-if a != 1 or b != 1:
-    sys.exit('weather.js : coordonnées introuvables')
-open(p, 'w', encoding='utf-8').write(s)
-print('  ✓ %s (%s, %s)' % (res.get('name'), lat, lon))
+print(res['latitude'], res['longitude'], res.get('name'))
 PY
-  then
+  ); then
     echo "  ✗ Ville non enregistrée (vérifie le nom ou la connexion)"
+    return
   fi
+  set -- $coords
+  mark_setup "$1" "$2"
+  echo "  ✓ $3 ($1, $2)"
 }
 
 set_photos() {
@@ -95,6 +115,8 @@ print('  ✓ %d photo(s) copiées dans photos/' % len(names))
 PY
   then
     echo "  ✗ Photos non copiées"
+  else
+    mark_setup
   fi
 }
 

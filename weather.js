@@ -2,8 +2,8 @@
   'use strict';
 
   // Approximate coordinates for Gazeran (Yvelines, France). Verify if needed.
-  var LAT = 48.76;
-  var LON = 1.87;
+  var LAT = typeof DASH_LAT === 'number' ? DASH_LAT : 48.76;
+  var LON = typeof DASH_LON === 'number' ? DASH_LON : 1.87;
   var URL = 'https://api.open-meteo.com/v1/forecast?latitude=' + LAT +
     '&longitude=' + LON + '&current_weather=true&timezone=Europe%2FParis';
   var REFRESH_MS = 15 * 60 * 1000;

@@ -8,6 +8,11 @@
     lastfmApiKey: 'ed3fbf6769fe8f50b8b688be7da068b7',
     lastfmUser: 'Nabixxxx'
   };
+  // Keys entered in the browser assistant take over when they exist.
+  if (window.DASH_CFG && window.DASH_CFG.key && window.DASH_CFG.user) {
+    CONFIG.lastfmApiKey = window.DASH_CFG.key;
+    CONFIG.lastfmUser = window.DASH_CFG.user;
+  }
 
   var DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
   var MONTHS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
@@ -580,6 +585,58 @@
     onNetChange();
   }
 
+  /* ---------- Widget layout: choose the column of weather and news ---------- */
+
+  var LAYOUT_NEXT = { left: 'right', right: 'hidden', hidden: 'left' };
+  var LAYOUT_LABEL = { left: 'Gauche', right: 'Droite', hidden: 'Masquée' };
+
+  function getLayout() {
+    var l = { weather: 'left', news: 'left' };
+    try {
+      var saved = JSON.parse(window.localStorage.getItem('dashLayout') || 'null');
+      if (saved) {
+        if (saved.weather) { l.weather = saved.weather; }
+        if (saved.news) { l.news = saved.news; }
+      }
+    } catch (e) {
+      // Storage unavailable: default layout.
+    }
+    return l;
+  }
+
+  function saveLayout(l) {
+    try {
+      window.localStorage.setItem('dashLayout', JSON.stringify(l));
+    } catch (e) {
+      // Storage unavailable: layout lasts until reload.
+    }
+  }
+
+  function applyLayout() {
+    var l = getLayout();
+    var zones = { left: $('side'), right: $('side-right') };
+    var keys = ['weather', 'news'];
+    for (var i = 0; i < keys.length; i++) {
+      var el = $(keys[i]);
+      if (!el) {
+        continue;
+      }
+      var zone = l[keys[i]];
+      if (zone === 'hidden') {
+        el.classList.add('off');
+        continue;
+      }
+      el.classList.remove('off');
+      if (zones[zone] && el.parentNode !== zones[zone]) {
+        zones[zone].appendChild(el);
+      }
+    }
+    var lw = $('lay-weather');
+    var ln = $('lay-news');
+    if (lw) { lw.textContent = LAYOUT_LABEL[l.weather]; }
+    if (ln) { ln.textContent = LAYOUT_LABEL[l.news]; }
+  }
+
   /* ---------- Settings: brightness and quotes, saved on this device ---------- */
 
   var quotesOn = true;
@@ -621,6 +678,7 @@
     if (val) {
       val.textContent = dimLevel + ' %';
     }
+    applyLayout();
     var pc = $('p-count');
     if (pc) {
       pc.textContent = String(userPhotos().length);
@@ -668,6 +726,18 @@
       saveSettings();
       applySettings();
       updateNight(lastMinute);
+    };
+    $('lay-weather').onclick = function () {
+      var l = getLayout();
+      l.weather = LAYOUT_NEXT[l.weather];
+      saveLayout(l);
+      applySettings();
+    };
+    $('lay-news').onclick = function () {
+      var l = getLayout();
+      l.news = LAYOUT_NEXT[l.news];
+      saveLayout(l);
+      applySettings();
     };
     $('p-add').onclick = function () {
       $('p-file').click();
@@ -929,6 +999,140 @@
     }, 20000);
   }
 
+  /* ---------- First-run assistant (browser only) ---------- */
+
+  var wizStep = 0;
+  var wizChanged = false;
+
+  function wizRender() {
+    var title = $('wiz-title');
+    var text = $('wiz-text');
+    var i1 = $('wiz-input');
+    var i2 = $('wiz-input2');
+    $('wiz-err').textContent = '';
+    if (wizStep === 0) {
+      title.textContent = 'Bienvenue';
+      text.textContent = 'Quelle ville pour la météo ? Laisse vide pour garder celle par défaut.';
+      i1.placeholder = 'Ville, par exemple Paris';
+      i1.value = '';
+      i2.style.display = 'none';
+      $('wiz-next').textContent = 'Suivant';
+    } else {
+      title.textContent = 'Spotify (facultatif)';
+      text.textContent = 'Clé API Last.fm et pseudo, pour afficher le morceau en cours. Laisse vide pour ignorer.';
+      i1.placeholder = 'Clé API Last.fm';
+      i1.value = '';
+      i2.placeholder = 'Pseudo Last.fm';
+      i2.value = '';
+      i2.style.display = '';
+      $('wiz-next').textContent = 'Terminer';
+    }
+  }
+
+  function wizFinish() {
+    try {
+      window.localStorage.setItem('dashWizardDone', '1');
+    } catch (e) {
+      // Storage unavailable: the assistant may show again.
+    }
+    $('wizard').style.display = 'none';
+    if (wizChanged) {
+      window.location.reload();
+    }
+  }
+
+  function wizGeocode(city, cb) {
+    var xhr;
+    try {
+      xhr = new XMLHttpRequest();
+    } catch (e) {
+      cb(false);
+      return;
+    }
+    xhr.open('GET', 'https://geocoding-api.open-meteo.com/v1/search?count=1&language=fr&format=json&name=' + encodeURIComponent(city), true);
+    xhr.timeout = 10000;
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState !== 4) {
+        return;
+      }
+      try {
+        var data = JSON.parse(xhr.responseText);
+        var r = data.results && data.results[0];
+        if (xhr.status === 200 && r) {
+          window.localStorage.setItem('dashCoords', JSON.stringify({ lat: r.latitude, lon: r.longitude }));
+          cb(true);
+          return;
+        }
+      } catch (e) {
+        // Fall through: city not found.
+      }
+      cb(false);
+    };
+    try {
+      xhr.send(null);
+    } catch (e) {
+      cb(false);
+    }
+  }
+
+  function wizNext() {
+    if (wizStep === 0) {
+      var city = $('wiz-input').value.trim();
+      if (!city) {
+        wizStep = 1;
+        wizRender();
+        return;
+      }
+      $('wiz-err').textContent = 'Recherche…';
+      wizGeocode(city, function (ok) {
+        if (ok) {
+          wizChanged = true;
+          wizStep = 1;
+          wizRender();
+        } else {
+          $('wiz-err').textContent = 'Ville introuvable, essaie une autre écriture.';
+        }
+      });
+      return;
+    }
+    var key = $('wiz-input').value.trim();
+    var user = $('wiz-input2').value.trim();
+    if (key && user) {
+      try {
+        window.localStorage.setItem('dashCfg', JSON.stringify({ key: key, user: user }));
+        wizChanged = true;
+      } catch (e) {
+        // Storage unavailable: nothing saved.
+      }
+    }
+    wizFinish();
+  }
+
+  function maybeWizard() {
+    if (window.SETUP_DONE) {
+      return;
+    }
+    var done = false;
+    try {
+      done = window.localStorage.getItem('dashWizardDone') === '1';
+    } catch (e) {
+      done = true;
+    }
+    if (done || !$('wizard')) {
+      return;
+    }
+    wizStep = 0;
+    wizRender();
+    $('wizard').style.display = '';
+    $('wiz-next').onclick = wizNext;
+    $('wiz-skip').onclick = wizFinish;
+    $('wiz-input').onkeydown = function (e) {
+      if (e && e.keyCode === 13) {
+        wizNext();
+      }
+    };
+  }
+
   /* ---------- Automatic update ----------
      Every 30 minutes the page asks the server for the ETag of index.html.
      When it changes, the page reloads only between 3 h and 5 h, and never
@@ -1039,6 +1243,7 @@
     checkForUpdate();
     window.setInterval(checkForUpdate, UPDATE_CHECK_MS);
     startPhotos();
+    maybeWizard();
     hideSplash();
   };
 })();

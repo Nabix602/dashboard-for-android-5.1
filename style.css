@@ -889,3 +889,105 @@ body.night #net {
   pointer-events: none;
 }
 
+/* Right-hand widget column (same rules as the left column) */
+#side-right {
+  position: fixed;
+  right: 4vw;
+  left: auto;
+  top: 15vh;
+  bottom: 0;
+  width: 18vw;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+/* A widget the user has hidden in the settings */
+.off {
+  display: none !important;
+}
+
+/* First-run assistant (browser only) */
+#wizard {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.86);
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.wiz-box {
+  width: 46vw;
+  padding: 5vh 4vw;
+  box-sizing: border-box;
+  border-radius: 36px;
+  background: #1c1c1e;
+  color: #f2f2f7;
+}
+
+.wiz-title {
+  margin: 0;
+  font-size: 4vh;
+  font-weight: 600;
+}
+
+.wiz-text {
+  margin: 1.6vh 0 0 0;
+  font-size: 2.2vh;
+  line-height: 1.4;
+  color: #aeaeb2;
+}
+
+#wizard input {
+  display: block;
+  width: 100%;
+  margin-top: 2.4vh;
+  padding: 1.6vh 1.4vw;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f2f2f7;
+  font-size: 2.4vh;
+}
+
+.wiz-err {
+  min-height: 2.4vh;
+  margin: 1vh 0 0 0;
+  font-size: 2vh;
+  color: #ff453a;
+}
+
+.wiz-actions {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  margin-top: 2vh;
+}
+
+.wiz-actions button {
+  margin-left: 1vw;
+  border: 0;
+  border-radius: 14px;
+  padding: 1.2vh 1.6vw;
+  background: rgba(255, 255, 255, 0.12);
+  color: #f2f2f7;
+  font-size: 2.2vh;
+}
+
+#wiz-next {
+  background: #0a84ff;
+}
+
